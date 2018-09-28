@@ -11,3 +11,12 @@ func DBMigrate(db *gorm.DB) *gorm.DB {
 
 	return db
 }
+
+type Serialize interface {
+	serialize() []byte
+}
+
+type Response struct {
+	Data interface{} `json:"data"`
+	Status uint16 `json:"status"`
+}
