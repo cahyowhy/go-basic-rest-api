@@ -30,12 +30,39 @@ func (app *App) Initialize(config *Config) {
 
 	app.DB = models.DBMigrate(db)
 	app.Router = mux.NewRouter()
-	app.setRouters()
+	app.DB.LogMode(true)
 
+	app.setRouters()
 }
 
 func (a *App) Run(host string) {
 	log.Fatal(http.ListenAndServe(host, a.Router))
+}
+
+func (a *App) seedsDb() {
+	users := []models.User{}
+	a.DB.Find(&users)
+
+	countUser := len(users)
+
+	if countUser < 200 {
+		for index := 0; index < 50; index++ {
+			user := models.User{}
+			user.FakeIt()
+			
+			if err := a.DB.Create(&user).Error; err != nil {
+				fmt.Println(err.Error())
+			}
+
+			todo := models.Todo{}
+			todo.FakeIt()
+			todo.User = user
+			
+			if err := a.DB.Create(&todo).Error; err != nil {
+				fmt.Println(err.Error())
+			}
+		}
+	}
 }
 
 func (app *App) setRouters() {

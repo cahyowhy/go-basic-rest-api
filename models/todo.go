@@ -1,7 +1,11 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
 	"time"
+
+	"github.com/icrowley/fake"
 )
 
 type Todo struct {
@@ -22,6 +26,25 @@ func (todo *Todo) completed() {
 
 func (todo *Todo) unCompleted() {
 	todo.Completed = false
+}
+
+func (t *Todo) FakeIt() {
+	duration := time.Now().AddDate(1, 2, fake.Day())
+
+	t.Name = fake.Company()
+	t.Completed = false
+	t.Due = &duration
+}
+
+func (t Todo) Serialize() []byte {
+	jsonVal, err := json.Marshal(t)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return jsonVal
 }
 
 type Todos []Todo

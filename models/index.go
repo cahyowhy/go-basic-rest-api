@@ -13,7 +13,7 @@ func DBMigrate(db *gorm.DB) *gorm.DB {
 }
 
 type Serialize interface {
-	serialize() []byte
+	Serialize() []byte
 }
 
 type Response struct {

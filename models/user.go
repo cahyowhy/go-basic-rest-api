@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/tidwall/sjson"
+	"github.com/icrowley/fake"
 )
 
 type User struct {
@@ -18,7 +19,7 @@ type User struct {
 	Todos     []Todo     `gorm:"ForeignKey:TodoID" json:"todos,omitempty"`
 }
 
-func (u User) serialize() []byte {
+func (u User) Serialize() []byte {
 	jsonVal, err := json.Marshal(u)
 	clonedJson := jsonVal
 	emits := []string{}
@@ -44,6 +45,10 @@ func (u User) serialize() []byte {
 	}
 
 	return clonedJson
+}
+
+func (u *User) FakeIt() {
+	u.Name = fake.FullName()
 }
 
 type Users []User

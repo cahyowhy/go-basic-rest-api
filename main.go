@@ -5,5 +5,6 @@ func main() {
 	config := GetConfig()
 	app := App{}
 	app.Initialize(config)
+	app.seedsDb()
 	app.Run(":3000")
 }
