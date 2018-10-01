@@ -2,12 +2,11 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
 
-	"github.com/tidwall/sjson"
 	"github.com/icrowley/fake"
+	"github.com/tidwall/sjson"
 )
 
 type User struct {
@@ -19,15 +18,10 @@ type User struct {
 	Todos     []Todo     `gorm:"ForeignKey:TodoID" json:"todos,omitempty"`
 }
 
-func (u User) Serialize() []byte {
+func (u User) Serialize() ([]byte, error) {
 	jsonVal, err := json.Marshal(u)
 	clonedJson := jsonVal
 	emits := []string{}
-
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
 
 	for index, element := range u.Todos {
 		if element.ID == 0 {
@@ -37,14 +31,9 @@ func (u User) Serialize() []byte {
 
 	for _, element := range emits {
 		clonedJson, err = sjson.DeleteBytes(clonedJson, element)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
 	}
 
-	return clonedJson
+	return clonedJson, err
 }
 
 func (u *User) FakeIt() {
@@ -52,3 +41,15 @@ func (u *User) FakeIt() {
 }
 
 type Users []User
+
+func SerializeUsers(users []User) ([]byte, error) {
+	jsonVal, err := json.Marshal([]User{})
+	clonedJson := jsonVal
+
+	for index, user := range users {
+		userJson, _ := user.Serialize()
+		clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), userJson)
+	}
+
+	return clonedJson, err
+}

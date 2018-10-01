@@ -46,7 +46,12 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondJSON(w, http.StatusOK, users)
+	userJsons, err := models.SerializeUsers(users)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+	}
+
+	processJSON(w, http.StatusOK, userJsons)
 }
 
 func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {

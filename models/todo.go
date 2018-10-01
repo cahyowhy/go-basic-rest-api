@@ -2,10 +2,11 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/icrowley/fake"
+	"github.com/tidwall/sjson"
 )
 
 type Todo struct {
@@ -36,15 +37,20 @@ func (t *Todo) FakeIt() {
 	t.Due = &duration
 }
 
-func (t Todo) Serialize() []byte {
-	jsonVal, err := json.Marshal(t)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	return jsonVal
+func (t Todo) Serialize() ([]byte, error) {
+	return json.Marshal(t)
 }
 
 type Todos []Todo
+
+func SerializeTodos(todos []Todo) ([]byte, error) {
+	jsonVal, err := json.Marshal([]Todo{})
+	clonedJson := jsonVal
+
+	for index, user := range todos {
+		todoJson, _ := user.Serialize()
+		clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), todoJson)
+	}
+
+	return clonedJson, err
+}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-basic-rest-api/models"
 	"net/http"
+	"fmt"
 
 	"github.com/jinzhu/gorm"
 )
@@ -11,15 +12,22 @@ import (
 type HandlerRoute func(*gorm.DB, http.ResponseWriter, *http.Request)
 
 func respondJSON(w http.ResponseWriter, status int, payload interface{models.Serialize}) {
-	response = payload.Serialize()
+	response, err := payload.Serialize()
 
-	if response == nil {
+	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+	w.WriteHeader(status)
+	w.Write([]byte(response))
+}
+
+func processJSON(w http.ResponseWriter, status int, response []byte) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	w.WriteHeader(status)
 	w.Write([]byte(response))
@@ -35,7 +43,5 @@ func respondError(w http.ResponseWriter, code int, message string) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-	w.WriteHeader(code)
-	w.Write([]byte(response))
+	processJSON(w, code, response)
 }
