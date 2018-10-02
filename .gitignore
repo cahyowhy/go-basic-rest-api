@@ -1,2 +1,4 @@
 go-basic-rest-api
 .idea/
+static/node_modules/
+static/dist/

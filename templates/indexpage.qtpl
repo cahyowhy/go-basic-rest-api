@@ -1,0 +1,9 @@
+{% code
+    import (
+        "go-basic-rest-api/models"
+    )
+%}
+
+{% func index(parameters) %}
+    result
+{% endfunc %}

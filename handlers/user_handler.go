@@ -40,7 +40,7 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Find(&users).Error; err != nil {
+	if err := db.Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&users).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 
 		return

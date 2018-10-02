@@ -1,0 +1,26 @@
+{
+  "name": "golang-vue-laravelmix",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.11.3",
+    "awesome-typescript-loader": "^5.2.1",
+    "laravel-mix": "^2.1.14",
+    "typescript": "^3.1.1",
+    "vue-loader": "^15.4.2"
+  },
+  "dependencies": {
+    "bulma": "^0.7.1",
+    "turbolinks": "^5.2.0",
+    "vue": "^2.5.17",
+    "vue-property-decorator": "^7.2.0",
+    "vue-turbolinks": "^2.0.3"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  }
+}

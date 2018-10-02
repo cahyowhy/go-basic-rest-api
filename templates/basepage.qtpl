@@ -1,0 +1,28 @@
+This is a base page template. All the other template pages implement this interface.
+{% code
+    type Page struct {
+        Title string
+        Body string
+    }
+%}
+
+Page prints a page implementing Page interface.
+{% func PageTemplate(p Page) %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" src="/static/dist/css/app.css">
+    <title>{%s p.Title %}</title>
+</head>
+<body>
+	<div id="app">
+        {%s p.Body %}
+    </div>
+    <script type="text/javascript" src="/static/dist/js/app.js">
+</script>
+</body>
+</html>
+{% endfunc %}

@@ -23,10 +23,8 @@ func (u User) Serialize() ([]byte, error) {
 	clonedJson := jsonVal
 	emits := []string{}
 
-	for index, element := range u.Todos {
-		if element.ID == 0 {
-			emits = append(emits, "todos."+strconv.Itoa(index)+".user")
-		}
+	for index, _ := range u.Todos {
+		emits = append(emits, "todos."+strconv.Itoa(index)+".user")
 	}
 
 	for _, element := range emits {

@@ -31,6 +31,7 @@ func (app *App) Initialize(config *Config) {
 	app.DB = models.DBMigrate(db)
 	app.Router = mux.NewRouter()
 
+	app.DB.LogMode(true)
 	app.setRouters()
 }
 
