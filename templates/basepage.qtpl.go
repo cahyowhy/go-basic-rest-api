@@ -3,26 +3,37 @@
 
 // This is a base page template. All the other template pages implement this interface.
 
-//line basepage.qtpl:2
+//line basepage.qtpl:3
 package templates
 
-//line basepage.qtpl:2
+//line basepage.qtpl:3
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line basepage.qtpl:2
+//line basepage.qtpl:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
 //line basepage.qtpl:3
-type Page struct {
-	Title string
-	Body  string
+type Page interface {
+	//line basepage.qtpl:3
+	Title() string
+	//line basepage.qtpl:3
+	StreamTitle(qw422016 *qt422016.Writer)
+	//line basepage.qtpl:3
+	WriteTitle(qq422016 qtio422016.Writer)
+	//line basepage.qtpl:3
+	Body() string
+	//line basepage.qtpl:3
+	StreamBody(qw422016 *qt422016.Writer)
+	//line basepage.qtpl:3
+	WriteBody(qq422016 qtio422016.Writer)
+//line basepage.qtpl:3
 }
 
 // Page prints a page implementing Page interface.
@@ -37,10 +48,10 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" src="/static/dist/css/app.css">
+    <link rel="stylesheet" src="/public/css/app.css">
     <title>`)
 	//line basepage.qtpl:18
-	qw422016.E().S(p.Title)
+	qw422016.E().S(p.Title())
 	//line basepage.qtpl:18
 	qw422016.N().S(`</title>
 </head>
@@ -48,11 +59,11 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	<div id="app">
         `)
 	//line basepage.qtpl:22
-	qw422016.E().S(p.Body)
+	qw422016.N().S(p.Body())
 	//line basepage.qtpl:22
 	qw422016.N().S(`
     </div>
-    <script type="text/javascript" src="/static/dist/js/app.js">
+    <script type="text/javascript" src="/public/js/app.js">
 </script>
 </body>
 </html>
@@ -84,4 +95,76 @@ func PageTemplate(p Page) string {
 	//line basepage.qtpl:28
 	return qs422016
 //line basepage.qtpl:28
+}
+
+// Base page implementation. Other pages may inherit from it if they need
+// overriding only certain Page methods
+
+//line basepage.qtpl:32
+type BasePage struct{}
+
+//line basepage.qtpl:33
+func (p *BasePage) StreamTitle(qw422016 *qt422016.Writer) {
+	//line basepage.qtpl:33
+	qw422016.N().S(`This is a base title`)
+//line basepage.qtpl:33
+}
+
+//line basepage.qtpl:33
+func (p *BasePage) WriteTitle(qq422016 qtio422016.Writer) {
+	//line basepage.qtpl:33
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line basepage.qtpl:33
+	p.StreamTitle(qw422016)
+	//line basepage.qtpl:33
+	qt422016.ReleaseWriter(qw422016)
+//line basepage.qtpl:33
+}
+
+//line basepage.qtpl:33
+func (p *BasePage) Title() string {
+	//line basepage.qtpl:33
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line basepage.qtpl:33
+	p.WriteTitle(qb422016)
+	//line basepage.qtpl:33
+	qs422016 := string(qb422016.B)
+	//line basepage.qtpl:33
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line basepage.qtpl:33
+	return qs422016
+//line basepage.qtpl:33
+}
+
+//line basepage.qtpl:34
+func (p *BasePage) StreamBody(qw422016 *qt422016.Writer) {
+	//line basepage.qtpl:34
+	qw422016.N().S(`This is a base body`)
+//line basepage.qtpl:34
+}
+
+//line basepage.qtpl:34
+func (p *BasePage) WriteBody(qq422016 qtio422016.Writer) {
+	//line basepage.qtpl:34
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line basepage.qtpl:34
+	p.StreamBody(qw422016)
+	//line basepage.qtpl:34
+	qt422016.ReleaseWriter(qw422016)
+//line basepage.qtpl:34
+}
+
+//line basepage.qtpl:34
+func (p *BasePage) Body() string {
+	//line basepage.qtpl:34
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line basepage.qtpl:34
+	p.WriteBody(qb422016)
+	//line basepage.qtpl:34
+	qs422016 := string(qb422016.B)
+	//line basepage.qtpl:34
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line basepage.qtpl:34
+	return qs422016
+//line basepage.qtpl:34
 }

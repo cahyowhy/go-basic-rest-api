@@ -1,9 +1,9 @@
 This is a base page template. All the other template pages implement this interface.
-{% code
-    type Page struct {
-        Title string
-        Body string
-    }
+{%
+interface Page {
+    Title()
+    Body()
+}
 %}
 
 Page prints a page implementing Page interface.
@@ -14,15 +14,21 @@ Page prints a page implementing Page interface.
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" src="/static/dist/css/app.css">
-    <title>{%s p.Title %}</title>
+    <link rel="stylesheet" href="/public/css/app.css">
+    <title>{%s p.Title() %}</title>
 </head>
 <body>
 	<div id="app">
-        {%s p.Body %}
+        {%s= p.Body() %}
     </div>
-    <script type="text/javascript" src="/static/dist/js/app.js">
+    <script type="text/javascript" src="/public/js/app.js">
 </script>
 </body>
 </html>
 {% endfunc %}
+
+Base page implementation. Other pages may inherit from it if they need
+overriding only certain Page methods
+{% code type BasePage struct {} %}
+{% func (p *BasePage) Title() %}This is a base title{% endfunc %}
+{% func (p *BasePage) Body() %}This is a base body{% endfunc %}

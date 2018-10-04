@@ -33,6 +33,7 @@ func (app *App) Initialize(config *Config) {
 
 	app.DB.LogMode(true)
 	app.setRouters()
+	app.Router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
 }
 
 func (a *App) Run(host string) {
@@ -49,7 +50,7 @@ func (a *App) seedsDb() {
 		for index := 0; index < 50; index++ {
 			user := models.User{}
 			user.FakeIt()
-			
+
 			if err := a.DB.Create(&user).Error; err != nil {
 				fmt.Println(err.Error())
 			}
@@ -57,7 +58,7 @@ func (a *App) seedsDb() {
 			todo := models.Todo{}
 			todo.FakeIt()
 			todo.User = user
-			
+
 			if err := a.DB.Create(&todo).Error; err != nil {
 				fmt.Println(err.Error())
 			}

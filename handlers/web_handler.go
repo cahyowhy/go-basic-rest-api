@@ -4,21 +4,23 @@ import (
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/templates"
 	"net/http"
-	"strconv"
 
 	"github.com/jinzhu/gorm"
 )
 
-func RenderIndex(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	//user := models.User{}
-	p := &templates.RootPage{}
+func RenderIndex(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	users := []models.User{}
 	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 
-	// if err := db.Find(&users).Error; err != nil {
-	// 	templates.(w, strconv.Itoa(http.StatusInternalServerError)+" INTERNAL SERVER ERR")
+	if err := db.Find(&users).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, "FAILED RENDER PAGE")
 
-	// 	return
-	// }
+		return
+	}
 
-	templates.WritePageTemplate(w, p);
+	p := &templates.IndexPage{
+		Users: users,
+	}
+
+	templates.WritePageTemplate(w, p)
 }

@@ -1,9 +1,40 @@
+{% import "go-basic-rest-api/models" %}
+
 {% code
-    import (
-        "go-basic-rest-api/models"
-    )
+    type IndexPage struct {
+        Users models.Users
+    }
 %}
 
-{% func index(parameters) %}
-    result
+{% func (p *IndexPage) Title() %}
+	Todos Websites
+{% endfunc %}
+
+{% func (p *IndexPage) Body() %}
+    <div class="columns">
+        <div class="column">
+            {% for _, user := range p.Users %}
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                        <img src="http://loremflickr.com/640/480" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <div class="media" style="margin-bottom:">
+                            <div class="media-left">
+                                <figure class="image is-48x48">
+                                <img src="http://loremflickr.com/96/96" alt="Placeholder image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <p class="title is-4">{%s user.Name %}</p>
+                                <p class="subtitle is-6">email@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endfunc %}
