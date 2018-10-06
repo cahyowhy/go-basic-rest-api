@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"go-basic-rest-api/models"
+	"go-basic-rest-api/utils"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,13 +12,17 @@ import (
 
 func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
-
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&user); err != nil {
+	err := decoder.Decode(&user)
+	password, errPass := utils.GeneratePassword(user.Password)
+
+	if err != nil || !user.ValidValue(false) || errPass != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
 
 		return
 	}
+
+	user.Password = password
 
 	defer r.Body.Close()
 
@@ -28,6 +33,31 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, user)
+}
+
+func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	user := models.User{}
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&user)
+
+	if err != nil || !user.ValidValue(true) {
+		respondError(w, http.StatusBadRequest, err.Error())
+	}
+
+	claimedPassword := user.Password
+	userStored := getUserOr404(db, user.Username, w, r)
+
+	if userStored == nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+	} 
+
+	isMatch := utils.CompareHashPassword(userStored.Password, claimedPassword)
+	
+	if !isMatch {
+		respondError(w, http.StatusUnauthorized, "UNAUTHORIZED!")
+	}
+
+	
 }
 
 func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -66,11 +96,11 @@ func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, user)
 }
 
-func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.User {
+func getUserOr404(db *gorm.DB, field string, w http.ResponseWriter, r *http.Request) *models.User {
 	user := models.User{}
 	todos := []models.Todo{}
 
-	if err := db.First(&user, id).Error; err != nil {
+	if err := db.First(&user, field).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 
 		return nil

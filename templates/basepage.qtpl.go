@@ -48,7 +48,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" src="/public/css/app.css">
+    <link rel="stylesheet" href="/public/css/app.css">
     <title>`)
 	//line basepage.qtpl:18
 	qw422016.E().S(p.Title())

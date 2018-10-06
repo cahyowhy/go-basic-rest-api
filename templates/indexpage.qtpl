@@ -12,7 +12,7 @@
 
 {% func (p *IndexPage) Body() %}
     <div class="columns">
-        <div class="column">
+        <div class="column is-4">
             {% for _, user := range p.Users %}
                 <div class="card">
                     <div class="card-image">
@@ -37,4 +37,8 @@
             {% endfor %}
         </div>
     </div>
+
+    <form>
+        
+    </form>
 {% endfunc %}

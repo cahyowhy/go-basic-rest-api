@@ -65,7 +65,7 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 	//line indexpage.qtpl:13
 	qw422016.N().S(`
     <div class="columns">
-        <div class="column">
+        <div class="column is-4">
             `)
 	//line indexpage.qtpl:16
 	for _, user := range p.Users {
@@ -102,32 +102,36 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
         </div>
     </div>
+
+    <form>
+        
+    </form>
 `)
-//line indexpage.qtpl:40
+//line indexpage.qtpl:44
 }
 
-//line indexpage.qtpl:40
+//line indexpage.qtpl:44
 func (p *IndexPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	p.StreamBody(qw422016)
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:40
+//line indexpage.qtpl:44
 }
 
-//line indexpage.qtpl:40
+//line indexpage.qtpl:44
 func (p *IndexPage) Body() string {
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	p.WriteBody(qb422016)
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:40
+	//line indexpage.qtpl:44
 	return qs422016
-//line indexpage.qtpl:40
+//line indexpage.qtpl:44
 }
