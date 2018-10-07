@@ -2,10 +2,13 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
+	"go-basic-rest-api/utils"
+	"log"
 	"strconv"
 	"time"
-	"log"
-	"go-basic-rest-api/utils"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/icrowley/fake"
 	"github.com/tidwall/sjson"
 )
@@ -40,19 +43,32 @@ func (u User) Serialize() ([]byte, error) {
 
 func (u User) ValidValue(checkLogin bool) bool {
 	validCreate := len(u.Name) > 4
-	
+
 	if checkLogin {
 		validCreate = true
 	}
 
-	return len(u.Username) > 6 && len(u.Password) > 6 && validCreate
+	return len(u.Username) > 6 && len(u.Password) > 3 && validCreate
+}
+
+func (u User) UserMapToken() (jwt.MapClaims, error) {
+	if !u.ValidValue(true) {
+		return nil, errors.New("User not valid, Must has username & password")
+	}
+
+	expired := strconv.FormatInt(time.Now().Add(time.Hour*3).Unix(), 10)
+	return jwt.MapClaims{
+		"username": u.Username,
+		"password": u.Password,
+		"expired":  expired,
+	}, nil
 }
 
 func (u *User) FakeIt() {
 	u.Name = fake.FullName()
 	u.Username = fake.UserName()
 	password, err := utils.GeneratePassword("1234")
-	
+
 	if err != nil {
 		log.Fatal(err)
 		password = "123456"
@@ -71,6 +87,15 @@ func SerializeUsers(users []User) ([]byte, error) {
 		userJson, _ := user.Serialize()
 		clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), userJson)
 	}
+
+	return clonedJson, err
+}
+
+func (u User) MergeToken(token string) ([]byte, error) {
+	jsonInitial, err := u.Serialize()
+
+	clonedJson := jsonInitial
+	clonedJson, err = sjson.SetBytes(clonedJson, "token", token)
 
 	return clonedJson, err
 }

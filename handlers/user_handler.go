@@ -17,7 +17,7 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	password, errPass := utils.GeneratePassword(user.Password)
 
 	if err != nil || !user.ValidValue(false) || errPass != nil {
-		respondError(w, http.StatusBadRequest, err.Error())
+		respondError(w, http.StatusBadRequest, "Bad JSON request")
 
 		return
 	}
@@ -37,27 +37,33 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 
 func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
+	userStored := models.User{}
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&user)
 
-	if err != nil || !user.ValidValue(true) {
-		respondError(w, http.StatusBadRequest, err.Error())
+	if err := decoder.Decode(&user); err != nil || !user.ValidValue(true) {
+		respondError(w, http.StatusBadRequest, "Bad JSON request")
+
+		return
 	}
 
-	claimedPassword := user.Password
-	userStored := getUserOr404(db, user.Username, w, r)
+	if errUser := db.Find(&userStored).Where("username=?", user.Username).Error; errUser != nil {
+		respondError(w, http.StatusBadRequest, errUser.Error())
 
-	if userStored == nil {
-		respondError(w, http.StatusBadRequest, err.Error())
-	} 
+		return
+	}
 
-	isMatch := utils.CompareHashPassword(userStored.Password, claimedPassword)
-	
-	if !isMatch {
+	isMatch := utils.CompareHashPassword(user.Password, userStored.Password)
+	userTokenMapper, errToken := userStored.UserMapToken()
+	tokenString, errGenToken := utils.GenerateToken(userTokenMapper)
+	responseJson, errMergToken := userStored.MergeToken(tokenString)
+
+	if !isMatch || errToken != nil || errGenToken != nil || errMergToken != nil {
 		respondError(w, http.StatusUnauthorized, "UNAUTHORIZED!")
+
+		return
 	}
 
-	
+	processJSON(w, http.StatusOK, responseJson)
 }
 
 func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -96,11 +102,15 @@ func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, user)
 }
 
-func getUserOr404(db *gorm.DB, field string, w http.ResponseWriter, r *http.Request) *models.User {
+func CekHeaderAuth(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	processJSON(w, http.StatusOK, utils.DecodedToken(r))
+}
+
+func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.User {
 	user := models.User{}
 	todos := []models.Todo{}
 
-	if err := db.First(&user, field).Error; err != nil {
+	if err := db.First(&user, id).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 
 		return nil

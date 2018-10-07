@@ -57,6 +57,18 @@ var DefinedRoutes = Routes{
 		handlers.GetAllUsers,
 	},
 	Route{
+		"LoginUsers",
+		"POST",
+		"/api/login",
+		handlers.AuthUsers,
+	},
+	Route{
+		"Authorization",
+		"GET",
+		"/api/header-check",
+		handlers.CekHeaderAuth,
+	},
+	Route{
 		"GetUser",
 		"GET",
 		"/api/users/{id}",

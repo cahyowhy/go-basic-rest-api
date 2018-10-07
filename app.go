@@ -46,7 +46,7 @@ func (a *App) seedsDb() {
 
 	countUser := len(users)
 
-	if countUser < 200 {
+	if countUser < 100 {
 		for index := 0; index < 50; index++ {
 			user := models.User{}
 			user.FakeIt()
