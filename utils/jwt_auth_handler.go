@@ -19,15 +19,20 @@ func GenerateToken(payloads jwt.MapClaims) (string, error) {
 }
 
 func DecodedToken(req *http.Request) []byte {
-	if ValidTokenHeader(req) {
-		return generateJson(map[string]string{"message": "AUTHORIZED"})
+	if !ValidTokenHeader(req) {
+		return generateJson(nil)
 	}
 
-	return generateJson(nil)
+	return nil
 }
 
 func ValidTokenHeader(req *http.Request) bool {
 	tokenString := req.Header.Get("Authorization")
+	
+	if !(len(tokenString) > 0) {
+		return false
+	}
+
 	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("There was an error")

@@ -27,7 +27,7 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{models.Ser
 	w.Write([]byte(response))
 }
 
-func processJSON(w http.ResponseWriter, status int, response []byte) {
+func ProcessJSON(w http.ResponseWriter, status int, response []byte) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	w.WriteHeader(status)
 	w.Write([]byte(response))
@@ -43,5 +43,5 @@ func respondError(w http.ResponseWriter, code int, message string) {
 		return
 	}
 
-	processJSON(w, code, response)
+	ProcessJSON(w, code, response)
 }

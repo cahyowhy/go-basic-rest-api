@@ -63,7 +63,7 @@ func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	processJSON(w, http.StatusOK, responseJson)
+	ProcessJSON(w, http.StatusOK, responseJson)
 }
 
 func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -87,7 +87,7 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	processJSON(w, http.StatusOK, userJsons)
+	ProcessJSON(w, http.StatusOK, userJsons)
 }
 
 func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -100,10 +100,6 @@ func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, user)
-}
-
-func CekHeaderAuth(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	processJSON(w, http.StatusOK, utils.DecodedToken(r))
 }
 
 func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.User {

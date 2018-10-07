@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"time"
 
+	"go-basic-rest-api/handlers"
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/routes"
+	"go-basic-rest-api/utils"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -79,6 +81,14 @@ func (app *App) setRouters() {
 				newRoute.Name,
 				time.Since(start),
 			)
+
+			if newRoute.AuthFirst {
+				if validHeaderAuth := utils.DecodedToken(r); validHeaderAuth != nil {
+					handlers.ProcessJSON(w, http.StatusUnauthorized, validHeaderAuth)
+
+					return
+				}
+			}
 
 			newRoute.RouteHandle(app.DB, w, r)
 		}

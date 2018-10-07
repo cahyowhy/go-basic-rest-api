@@ -30,7 +30,7 @@ func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	processJSON(w, http.StatusOK, todoJsons)
+	ProcessJSON(w, http.StatusOK, todoJsons)
 }
 
 func CreateTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {

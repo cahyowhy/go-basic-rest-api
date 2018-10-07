@@ -38,7 +38,19 @@ func (t *Todo) FakeIt() {
 }
 
 func (t Todo) Serialize() ([]byte, error) {
-	return json.Marshal(t)
+	jsonVal, err := json.Marshal(t)
+	clonedJson := jsonVal
+
+	if err == nil {
+		if t.User.ID != 0 {
+			userJson, _ := t.User.Serialize()
+			clonedJson, err = sjson.SetRawBytes(clonedJson, "user", userJson)
+		} else {
+			clonedJson, err = sjson.DeleteBytes(clonedJson, "user")
+		}
+	}
+
+	return clonedJson, err
 }
 
 type Todos []Todo
@@ -47,9 +59,11 @@ func SerializeTodos(todos []Todo) ([]byte, error) {
 	jsonVal, err := json.Marshal([]Todo{})
 	clonedJson := jsonVal
 
-	for index, user := range todos {
-		todoJson, _ := user.Serialize()
-		clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), todoJson)
+	if err == nil {
+		for index, user := range todos {
+			todoJson, _ := user.Serialize()
+			clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), todoJson)
+		}
 	}
 
 	return clonedJson, err
