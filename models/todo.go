@@ -60,8 +60,8 @@ func SerializeTodos(todos []Todo) ([]byte, error) {
 	clonedJson := jsonVal
 
 	if err == nil {
-		for index, user := range todos {
-			todoJson, _ := user.Serialize()
+		for index, todo := range todos {
+			todoJson, _ := todo.Serialize()
 			clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), todoJson)
 		}
 	}

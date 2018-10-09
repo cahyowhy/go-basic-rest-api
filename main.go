@@ -1,10 +1,11 @@
 package main
 
+import "go-basic-rest-api/config"
+
 func main() {
-	// router := routes.NewRouter()
-	config := GetConfig()
+	configApp := config.GetConfig()
 	app := App{}
-	app.Initialize(config)
+	app.Initialize(configApp)
 	app.seedsDb()
 	app.Run(":3000")
 }

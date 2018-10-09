@@ -8,6 +8,7 @@ import (
 
 	"go-basic-rest-api/handlers"
 	"go-basic-rest-api/models"
+	"go-basic-rest-api/config"
 	"go-basic-rest-api/routes"
 	"go-basic-rest-api/utils"
 
@@ -20,7 +21,7 @@ type App struct {
 	DB     *gorm.DB
 }
 
-func (app *App) Initialize(config *Config) {
+func (app *App) Initialize(config *config.Config) {
 	dbURI := fmt.Sprintf("%s:%s@/%s?charset=%s&parseTime=True",
 		config.DB.Username, config.DB.Password, config.DB.Name,
 		config.DB.Charset)
