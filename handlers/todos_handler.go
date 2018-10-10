@@ -107,7 +107,7 @@ func DeleteTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondJSON(w, http.StatusNoContent, nil)
+	ProcessJSON(w, http.StatusOK, []byte(`{message: "Delete Suceed"}`))
 }
 
 func getTodoOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.Todo {
