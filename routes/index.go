@@ -79,6 +79,13 @@ var DefinedRoutes = Routes{
 		handlers.GetUser,
 	},
 	Route{
+		"UploadTodo",
+		"POST",
+		"/api/upload-todos",
+		true,
+		handlers.UploadTodo,
+	},
+	Route{
 		"RenderIndex",
 		"GET",
 		"/",

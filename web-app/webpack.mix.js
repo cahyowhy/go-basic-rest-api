@@ -1,6 +1,8 @@
 const mix = require('laravel-mix');
 const path = require('path');
-
+const resolve = (file) => path.resolve(__dirname, file);
+const isProduction = mix.inProduction();
+const environmentPath = resolve('src/view/config/environment');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -13,6 +15,7 @@ const path = require('path');
  */
 
 mix.disableSuccessNotifications();
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 mix
   .options({
@@ -20,7 +23,7 @@ mix
   })
   .sass('src/sass/app.scss', "dist/css")
   .js('src/app.ts', "dist/js")
-  .copyDirectory("dist","../public")
+  .copyDirectory("dist", "../public")
   .webpackConfig({
     devtool: mix.inProduction() ? '' : 'inline-source-map',
     module: {
@@ -33,10 +36,20 @@ mix
         exclude: /node_modules/,
       }],
     },
+    plugins: [
+      new LiveReloadPlugin()
+    ],
     resolve: {
+      modules: [resolve('src'), resolve('node_modules')],
       extensions: ['*', '.js', '.jsx', '.vue', '.ts', '.tsx'],
       alias: {
-        styles: path.resolve(__dirname, 'resources/src/sass')
-      },
+        'window': 'window',
+        '$': "window.$",
+        "jQuery": "window.$",
+        'vue$': 'vue/dist/vue.js',
+        'typescript-ioc': 'typescript-ioc/es6',
+        'annotation': path.resolve(__dirname, 'src/view/util/Annotation.ts'),
+        'environment': environmentPath + `${isProduction ? '/production' : '/development'}.env.ts`,
+      }
     },
   });

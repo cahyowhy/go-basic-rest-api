@@ -64,74 +64,35 @@ func (p *IndexPage) Title() string {
 func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 	//line indexpage.qtpl:13
 	qw422016.N().S(`
-    <div class="columns">
-        <div class="column is-4">
-            `)
-	//line indexpage.qtpl:16
-	for _, user := range p.Users {
-		//line indexpage.qtpl:16
-		qw422016.N().S(`
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                        <img src="http://loremflickr.com/640/480" alt="Placeholder image">
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div class="media" style="margin-bottom:">
-                            <div class="media-left">
-                                <figure class="image is-48x48">
-                                <img src="http://loremflickr.com/96/96" alt="Placeholder image">
-                                </figure>
-                            </div>
-                            <div class="media-content">
-                                <p class="title is-4">`)
-		//line indexpage.qtpl:31
-		qw422016.E().S(user.Name)
-		//line indexpage.qtpl:31
-		qw422016.N().S(`</p>
-                                <p class="subtitle is-6">email@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `)
-		//line indexpage.qtpl:37
-	}
-	//line indexpage.qtpl:37
-	qw422016.N().S(`
-        </div>
+    <div class="login-page">
+        <form-login></form-login>  
     </div>
-
-    <form>
-        
-    </form>
 `)
-//line indexpage.qtpl:44
+//line indexpage.qtpl:17
 }
 
-//line indexpage.qtpl:44
+//line indexpage.qtpl:17
 func (p *IndexPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	p.StreamBody(qw422016)
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:44
+//line indexpage.qtpl:17
 }
 
-//line indexpage.qtpl:44
+//line indexpage.qtpl:17
 func (p *IndexPage) Body() string {
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	p.WriteBody(qb422016)
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:44
+	//line indexpage.qtpl:17
 	return qs422016
-//line indexpage.qtpl:44
+//line indexpage.qtpl:17
 }

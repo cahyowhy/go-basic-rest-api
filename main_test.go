@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-basic-rest-api/config"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -51,6 +53,44 @@ func TestGetTodos(t *testing.T) {
 
 	executeBasicHandlerGetTest(t, m1, "/api/todos/1", http.StatusOK)
 	executeBasicHandlerGetTest(t, m2, "/api/todos/1001", http.StatusNotFound)
+}
+
+//main server should running
+func TestUploadTodos(t *testing.T) {
+	TestLogin(t)
+
+	if len(token) == 0 {
+		t.Error("UNAUTHORIZED")
+	}
+
+	values := map[string]io.Reader{
+		"file": mustOpen("./sample-upload.jpg"),
+	}
+
+	err, _, b := prepareUpload(values)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", "http://localhost:3000/api/upload-todos", b)
+
+	if err != nil || b == nil {
+		t.Fatal(err)
+	}
+
+	req.Header.Set("Authorization", token)
+	req.Header.Set("Content-Type", "multipart/form-data")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+
+	checkResponseCode(t, http.StatusOK, resp.StatusCode)
+	resp.Body.Close()
 }
 
 func TestGetUsers(t *testing.T) {
@@ -112,6 +152,51 @@ func TestLogin(t *testing.T) {
 func prepareDb(db *gorm.DB) {
 	db.Exec("update todos set deleted_at = null")
 	db.Exec("update users set deleted_at = null")
+}
+
+func mustOpen(f string) *os.File {
+	r, err := os.Open(f)
+	if err != nil {
+		panic(err)
+	}
+	return r
+}
+
+func prepareUpload(values map[string]io.Reader) (error, *multipart.Writer, *bytes.Buffer) {
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	for key, r := range values {
+		var fw io.Writer
+		var err error
+		if x, ok := r.(io.Closer); ok {
+			defer x.Close()
+		}
+
+		// Add an image file
+		if x, ok := r.(*os.File); ok {
+			fw, err = w.CreateFormFile(key, x.Name())
+			if err != nil {
+				return err, nil, nil
+			}
+		}
+
+		// else {
+		// 	// Add other fields
+		// 	if _, err := w.CreateFormField(key); err != nil {
+		// 		return err, nil, nil
+		// 	}
+		// }
+
+		if _, err := io.Copy(fw, r); err != nil {
+			return err, nil, nil
+		}
+	}
+
+	// Don't forget to close the multipart writer.
+	// If you don't close it, your request will be missing the terminating boundary.
+	w.Close()
+
+	return nil, w, &b
 }
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {

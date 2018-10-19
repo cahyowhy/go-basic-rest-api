@@ -85,7 +85,7 @@ func (app *App) setRouters() {
 
 			if newRoute.AuthFirst {
 				if validHeaderAuth := utils.DecodedToken(r); validHeaderAuth != nil {
-					handlers.ProcessJSON(w, http.StatusUnauthorized, validHeaderAuth)
+					handlers.ProcessJSON(w, http.StatusUnauthorized, validHeaderAuth, utils.TOKEN_NOT_VALID)
 
 					return
 				}

@@ -1,24 +1,36 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "experimentalDecorators": true,
-    "module": "es2015",
+    "module": "esnext",
+    "rootDir": "src",
+    "outDir": "dist",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictPropertyInitialization": false,
-    "noImplicitThis": true,
+    "noImplicitThis": false,
     "strictNullChecks": false,
     "skipDefaultLibCheck": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "suppressImplicitAnyIndexErrors": true,
     "strict": true,
-    "target": "es2015",
+    "target": "es5",
     "lib": [
       "dom",
       "es2017"
-    ]
+    ],
+    "paths": {
+      "annotation": [
+        "src/view/util/Annotation"
+      ],
+      "environment": [
+        "src/view/config/environment/base.env",
+        "src/view/config/environment/development.env",
+        "src/view/config/environment/production.env",
+      ]
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -26,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
+    "dist",
     "**/*.spec.ts"
   ]
 }

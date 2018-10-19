@@ -1,14 +1,61 @@
-import Vue from 'vue';
-import VueTurbolinks from "./view/mixins/vue-turbolinks"
-import InputValidator from './view/components/InputValidator.vue';
+import { Vue, Inject } from 'annotation';
+import CommonService from './view/service/CommonService';
+import queryString from 'query-string';
+import Turbolinks from 'turbolinks';
 
-Vue.use(VueTurbolinks);
+import './view/plugin/VueCookie';
+import './view/plugin/VueDefault';
+import './view/plugin/VueOther';
+import i18n from './view/plugin/Vuei18n';
 
-document.addEventListener('turbolinks:load', () => {
-    new Vue({
-        el: '#app',
-        components: {
-            'input-validator': InputValidator
-        }
+function handleVueDestruction(vue) {
+    document.addEventListener('turbolinks:visit', function teardown() {
+        vue.$destroy();
+        document.removeEventListener('turbolinks:visit', teardown);
     });
-});
+}
+
+class App {
+
+    @Inject
+    private commonService: CommonService;
+
+    init() {
+        const context: App = this;
+        let el = '#app';
+
+        Turbolinks.start();
+        document.addEventListener('turbolinks:load', () => {
+            (window as any).appPreview = new Vue({
+                el,
+                i18n,
+                beforeMount: function () {
+                    if (this.$el.parentNode) {
+                        handleVueDestruction(this);
+                        this.$originalEl = this.$el.outerHTML;
+                    }
+                },
+                destroyed: function () {
+                    this.$el.outerHTML = this.$originalEl;
+                },
+                computed: {
+                    route() {
+                        const urlLocation = (window as any).location;
+                        const path = urlLocation.pathname;
+                        const query = queryString.parse(urlLocation.search) || {};
+                        const hash = queryString.parse(urlLocation.hash) || {};
+
+                        return { path, query, hash };
+                    }
+                }
+            });
+
+            context.commonService.app = (window as any).appPreview;
+        });
+    }
+}
+
+const app = new App();
+app.init();
+
+export default app;

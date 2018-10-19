@@ -3,6 +3,7 @@ package handlers
 import (
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/templates"
+	"go-basic-rest-api/utils"
 	"net/http"
 
 	"github.com/jinzhu/gorm"
@@ -13,7 +14,7 @@ func RenderIndex(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 
 	if err := db.Find(&users).Error; err != nil {
-		respondError(w, http.StatusInternalServerError, "FAILED RENDER PAGE")
+		respondError(w, http.StatusInternalServerError, "FAILED RENDER PAGE", utils.DATA_NOT_FOUND)
 
 		return
 	}

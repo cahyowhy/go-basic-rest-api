@@ -1,4 +1,5 @@
 This is a base page template. All the other template pages implement this interface.
+{% import "os" %}
 {%
 interface Page {
     Title()
@@ -15,14 +16,17 @@ Page prints a page implementing Page interface.
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css">
     <title>{%s p.Title() %}</title>
 </head>
 <body>
 	<div id="app">
         {%s= p.Body() %}
     </div>
-    <script type="text/javascript" src="/public/js/app.js">
-</script>
+    <script type="text/javascript" src="/public/js/app.js"></script>
+    {% if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" %}
+        <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
 </body>
 </html>
 {% endfunc %}

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/utils"
 	"net/http"
@@ -17,7 +18,7 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	password, errPass := utils.GeneratePassword(user.Password)
 
 	if err != nil || !user.ValidValue(false) || errPass != nil {
-		respondError(w, http.StatusBadRequest, "Bad JSON request")
+		respondError(w, http.StatusBadRequest, `"Bad JSON request"`, utils.DATA_NOT_FOUND)
 
 		return
 	}
@@ -27,12 +28,12 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if err := db.Save(&user).Error; err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
 
 		return
 	}
 
-	respondJSON(w, http.StatusOK, user)
+	respondJSON(w, http.StatusOK, user, utils.SAVE_SUCCESS)
 }
 
 func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -41,13 +42,13 @@ func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	if err := decoder.Decode(&user); err != nil || !user.ValidValue(true) {
-		respondError(w, http.StatusBadRequest, "Bad JSON request")
+		respondError(w, http.StatusBadRequest, `"Bad JSON body"`, utils.INPUT_NOT_VALID)
 
 		return
 	}
 
-	if errUser := db.Find(&userStored).Where("username=?", user.Username).Error; errUser != nil {
-		respondError(w, http.StatusBadRequest, errUser.Error())
+	if errUser := db.Where("username = ?", user.Username).First(&userStored).Error; errUser != nil || userStored.ID == 0 {
+		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, errUser.Error()), utils.DATA_NOT_FOUND)
 
 		return
 	}
@@ -58,12 +59,12 @@ func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	responseJson, errMergToken := userStored.MergeToken(tokenString)
 
 	if !isMatch || errToken != nil || errGenToken != nil || errMergToken != nil {
-		respondError(w, http.StatusUnauthorized, "UNAUTHORIZED!")
+		respondError(w, http.StatusUnauthorized, `"Password not valid!"`, utils.PASSWORD_NOT_VALID)
 
 		return
 	}
 
-	ProcessJSON(w, http.StatusOK, responseJson)
+	ProcessJSON(w, http.StatusOK, responseJson, utils.LOGIN_SUCCESS)
 }
 
 func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -71,23 +72,23 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	users := []models.User{}
 
 	if query.Get("offset") == "" || query.Get("limit") == "" {
-		respondError(w, http.StatusBadRequest, "Required offset limit but not present")
+		respondError(w, http.StatusBadRequest, `"Required offset limit but not present"`, utils.INPUT_NOT_VALID)
 
 		return
 	}
 
 	if err := db.Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&users).Error; err != nil {
-		respondError(w, http.StatusNotFound, err.Error())
+		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
 
 		return
 	}
 
 	userJsons, err := models.SerializeUsers(users)
 	if err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.FAILED_SERIALIZE)
 	}
 
-	ProcessJSON(w, http.StatusOK, userJsons)
+	ProcessJSON(w, http.StatusOK, userJsons, utils.STATUS_OK)
 }
 
 func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -99,7 +100,7 @@ func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondJSON(w, http.StatusOK, user)
+	respondJSON(w, http.StatusOK, user, utils.STATUS_OK)
 }
 
 func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.User {
@@ -107,7 +108,7 @@ func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request
 	todos := []models.Todo{}
 
 	if err := db.First(&user, id).Error; err != nil {
-		respondError(w, http.StatusNotFound, err.Error())
+		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
 
 		return nil
 	}

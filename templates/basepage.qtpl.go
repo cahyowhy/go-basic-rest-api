@@ -3,44 +3,47 @@
 
 // This is a base page template. All the other template pages implement this interface.
 
-//line basepage.qtpl:3
+//line basepage.qtpl:2
 package templates
 
-//line basepage.qtpl:3
+//line basepage.qtpl:2
+import "os"
+
+//line basepage.qtpl:4
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line basepage.qtpl:3
+//line basepage.qtpl:4
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line basepage.qtpl:3
+//line basepage.qtpl:4
 type Page interface {
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	Title() string
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	StreamTitle(qw422016 *qt422016.Writer)
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	WriteTitle(qq422016 qtio422016.Writer)
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	Body() string
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	StreamBody(qw422016 *qt422016.Writer)
-	//line basepage.qtpl:3
+	//line basepage.qtpl:4
 	WriteBody(qq422016 qtio422016.Writer)
-//line basepage.qtpl:3
+//line basepage.qtpl:4
 }
 
 // Page prints a page implementing Page interface.
 
-//line basepage.qtpl:10
+//line basepage.qtpl:11
 func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
-	//line basepage.qtpl:10
+	//line basepage.qtpl:11
 	qw422016.N().S(`
 <!DOCTYPE html>
 <html>
@@ -49,122 +52,133 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css">
     <title>`)
-	//line basepage.qtpl:18
+	//line basepage.qtpl:20
 	qw422016.E().S(p.Title())
-	//line basepage.qtpl:18
+	//line basepage.qtpl:20
 	qw422016.N().S(`</title>
 </head>
 <body>
 	<div id="app">
         `)
-	//line basepage.qtpl:22
+	//line basepage.qtpl:24
 	qw422016.N().S(p.Body())
-	//line basepage.qtpl:22
+	//line basepage.qtpl:24
 	qw422016.N().S(`
     </div>
-    <script type="text/javascript" src="/public/js/app.js">
-</script>
+    <script type="text/javascript" src="/public/js/app.js"></script>
+    `)
+	//line basepage.qtpl:27
+	if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" {
+		//line basepage.qtpl:27
+		qw422016.N().S(`
+        <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
+    `)
+		//line basepage.qtpl:29
+	}
+	//line basepage.qtpl:29
+	qw422016.N().S(`
 </body>
 </html>
 `)
-//line basepage.qtpl:28
+//line basepage.qtpl:32
 }
 
-//line basepage.qtpl:28
+//line basepage.qtpl:32
 func WritePageTemplate(qq422016 qtio422016.Writer, p Page) {
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	StreamPageTemplate(qw422016, p)
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	qt422016.ReleaseWriter(qw422016)
-//line basepage.qtpl:28
+//line basepage.qtpl:32
 }
 
-//line basepage.qtpl:28
+//line basepage.qtpl:32
 func PageTemplate(p Page) string {
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	WritePageTemplate(qb422016, p)
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	qs422016 := string(qb422016.B)
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line basepage.qtpl:28
+	//line basepage.qtpl:32
 	return qs422016
-//line basepage.qtpl:28
+//line basepage.qtpl:32
 }
 
 // Base page implementation. Other pages may inherit from it if they need
 // overriding only certain Page methods
 
-//line basepage.qtpl:32
+//line basepage.qtpl:36
 type BasePage struct{}
 
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 func (p *BasePage) StreamTitle(qw422016 *qt422016.Writer) {
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qw422016.N().S(`This is a base title`)
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 }
 
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 func (p *BasePage) WriteTitle(qq422016 qtio422016.Writer) {
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	p.StreamTitle(qw422016)
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qt422016.ReleaseWriter(qw422016)
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 }
 
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 func (p *BasePage) Title() string {
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	p.WriteTitle(qb422016)
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qs422016 := string(qb422016.B)
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line basepage.qtpl:33
+	//line basepage.qtpl:37
 	return qs422016
-//line basepage.qtpl:33
+//line basepage.qtpl:37
 }
 
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 func (p *BasePage) StreamBody(qw422016 *qt422016.Writer) {
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qw422016.N().S(`This is a base body`)
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 }
 
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 func (p *BasePage) WriteBody(qq422016 qtio422016.Writer) {
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	p.StreamBody(qw422016)
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qt422016.ReleaseWriter(qw422016)
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 }
 
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 func (p *BasePage) Body() string {
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	p.WriteBody(qb422016)
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qs422016 := string(qb422016.B)
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line basepage.qtpl:34
+	//line basepage.qtpl:38
 	return qs422016
-//line basepage.qtpl:34
+//line basepage.qtpl:38
 }

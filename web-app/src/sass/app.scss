@@ -1,1 +1,36 @@
-@import "~bulma"
+@import "vars.scss";
+
+#app {
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+img.is-rounded {
+    border-radius: 50%;
+}
+
+.form-login-register {
+    >section.logo-wrp {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        img {
+            width: 128px;
+            height:  128px;
+        }
+    }
+}
+
+.login-page {
+    width: 500px;
+    height: 100%;
+    align-items: center;
+    margin: auto;
+    min-height: 100vh;
+    display: flex;
+    section {
+        width: 100%;
+        &:last-child {
+            margin-top: 1.5rem;
+        }
+    }
+}
