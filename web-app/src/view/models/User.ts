@@ -1,6 +1,7 @@
 import Base from "./Base";
 import Todo from "./Todo";
 import { deserialize, inheritSerialization, serialize } from "cerialize";
+import { keysIn } from 'lodash';
 
 @inheritSerialization(Base)
 export default class User extends Base {
@@ -14,10 +15,16 @@ export default class User extends Base {
 
   @deserialize
   @serialize
-  public password: string = "123456";
+  public password: string = "1234";
 
   @deserialize
   public todos: Array<Todo> = [];
+
+  @deserialize
+  public token: string = "";
+
+  @deserialize
+  public passwordConfirm: string = "";
 
   public nameFeedback(): any {
     const valid = this.name.length > 4;
@@ -43,6 +50,18 @@ export default class User extends Base {
     };
   }
 
+  public passwordConfirmFeedback(): any {
+    const valid = this.password === this.passwordConfirm;
+    const type = `is-${valid ? 'success' : 'danger'}`;
+    const error = valid ? "" : "Password does'nt match";
+
+    return {
+      type,
+      valid,
+      error
+    };
+  }
+
   public usernameFeedback(): any {
     const valid = this.username.length > 6;
     const type = `is-${valid ? 'success' : 'danger'}`;
@@ -57,5 +76,16 @@ export default class User extends Base {
 
   public validLogin(): boolean {
     return this.usernameFeedback().valid && this.passwordFeedback().valid;
+  }
+
+  public valid(): boolean {
+    return keysIn(this).filter((prop: string) => prop.toLowerCase().includes('feedback'))
+      .every((prop: string) => this[prop]().valid);
+  }
+
+  public loginProperty(): any {
+    const { username, password } = this;
+
+    return { username, password };
   }
 }

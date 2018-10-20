@@ -10,6 +10,7 @@ import (
 func main() {
 	configApp := config.GetConfig()
 	var env = flag.String("env", "DEV", "type environment")
+	configApp.SetEnv(*env)
 
 	if *env == "PROD" {
 		godotenv.Load(".env.production")

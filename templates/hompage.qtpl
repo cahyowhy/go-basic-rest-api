@@ -1,0 +1,23 @@
+{% import "go-basic-rest-api/models" %}
+
+{% code
+    type HomePage struct {
+        User models.User
+    }
+%}
+
+{% func (p *HomePage) Title() %}
+	Beranda {%s p.User.Username%}
+{% endfunc %}
+
+{% func (p *HomePage) Body() %}
+    <div class="home-page">
+        <user-home></user-home>  
+    </div>
+{% endfunc %}
+
+{% func (p *HomePage) CSSExternal() %}
+{% endfunc %}
+
+{% func (p *HomePage) ScriptExternal() %}
+{% endfunc %}

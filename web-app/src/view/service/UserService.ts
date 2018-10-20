@@ -20,11 +20,11 @@ export default class UserService extends ProxyService {
 
   public serializer: EntityAware = User;     // define serializer after fetch data
 
-  public doLogin(param: any): Promise<any> {
+  public doLogin(T: EntityAware): Promise<any> {
     this.redirectOnFailedAuth = false;
     const api = environment['API_URL'] + '/login';
 
-    return this.post(param, api).then((response: any = {}) => {
+    return this.post(T, api).then((response: any = {}) => {
       if ((response || {}).hasOwnProperty("data")) {
         this.commonService.setUser(response.data);
       }

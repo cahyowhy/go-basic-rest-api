@@ -11,7 +11,7 @@ import {Singleton} from 'annotation';
 @Singleton
 export default class StorageService {
 
-  private rootKey: string = 'icofr';
+  private rootKey: string = 'todoApp';
 
   private localStorage: any = null;
 

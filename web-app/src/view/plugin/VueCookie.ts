@@ -4,15 +4,15 @@
  * Vue cookie plugin to session(focus to user)
  */
 
-import {Vue} from 'annotation';
+import { Vue } from 'annotation';
 import base64 from 'base-64';
 import jsCookie from 'js-cookie';
-import {Deserialize} from 'cerialize';
+import { Deserialize } from 'cerialize';
 
 import User from '../models/User';
 import cryptoJS from "crypto-js";
 
-const cookieName: string = 'icofr';
+const cookieName: string = 'todoApp';
 const cookieKey: string = '⪂恢恢⪂鐁䰁ڰځ᠍䁏ǘᗌ惀䄁�琩';
 const isBrowser: boolean = 'undefined' !== typeof window;
 
@@ -28,9 +28,21 @@ const writeToWindow: any = () => {
     let cookie: any = JSON.stringify(vm.$data.cookie);
     cookie = cryptoJS.AES.encrypt(cookie, cookieKey.split('').reverse().join('')).toString();
 
-    jsCookie.set(cookieName, base64.encode(cookie.split('').reverse().join('')), {expires: 1});
+    jsCookie.set(cookieName, base64.encode(cookie.split('').reverse().join('')), { expires: 1 });
   }
 };
+
+// write token to cookie, for server validate token
+// to check user is loged in
+const forceWriteDeleteToken: any = (isDelete: boolean = false, token: string) => {
+  if (isBrowser) {
+    if (isDelete) {
+      jsCookie.remove('token');
+    } else {
+      jsCookie.set('token', token, { expires: 1 });
+    }
+  }
+}
 
 const vueCookie: any = Vue.prototype.$cookie = {
 
@@ -47,6 +59,7 @@ const vueCookie: any = Vue.prototype.$cookie = {
       try {
         result = JSON.parse(result);
       } catch (e) {
+        console.log(e);
       }
     }
 
@@ -59,12 +72,17 @@ const vueCookie: any = Vue.prototype.$cookie = {
    * @param key {string} name
    * @param value {object|string} value
    */
-  set(key: string, value: any) {
+  set(key: string, value: any = {}) {
     try {
       vm.$set(vm.$data.cookie, key, value);
 
+      if (value['token']) {
+        forceWriteDeleteToken(false, value['token'])
+      }
+
       writeToWindow();
     } catch (error) {
+      console.log(error);
     }
   },
 
@@ -87,6 +105,8 @@ const vueCookie: any = Vue.prototype.$cookie = {
         jsCookie.remove(cookieName);
       }
     }
+
+    forceWriteDeleteToken(true, "");
   },
 
   /**

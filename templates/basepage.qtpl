@@ -4,6 +4,8 @@ This is a base page template. All the other template pages implement this interf
 interface Page {
     Title()
     Body()
+    CSSExternal()
+    ScriptExternal()
 }
 %}
 
@@ -17,6 +19,7 @@ Page prints a page implementing Page interface.
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css">
+    {%s= p.CSSExternal() %}
     <title>{%s p.Title() %}</title>
 </head>
 <body>
@@ -24,6 +27,7 @@ Page prints a page implementing Page interface.
         {%s= p.Body() %}
     </div>
     <script type="text/javascript" src="/public/js/app.js"></script>
+    {%s= p.ScriptExternal() %}
     {% if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" %}
         <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
     {% endif %}

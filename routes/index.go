@@ -2,6 +2,9 @@ package routes
 
 import (
 	"go-basic-rest-api/handlers"
+	"go-basic-rest-api/utils"
+	"net/http"
+	"strings"
 )
 
 type Route struct {
@@ -9,6 +12,7 @@ type Route struct {
 	Method      string
 	Pattern     string
 	AuthFirst   bool
+	AuthCookie  bool
 	RouteHandle handlers.HandlerRoute
 }
 
@@ -20,6 +24,7 @@ var DefinedRoutes = Routes{
 		"GET",
 		"/api/todos",
 		false,
+		false,
 		handlers.GetAllTodos,
 	},
 	Route{
@@ -27,12 +32,14 @@ var DefinedRoutes = Routes{
 		"POST",
 		"/api/todos",
 		true,
+		false,
 		handlers.CreateTodo,
 	},
 	Route{
 		"GetTodo",
 		"GET",
 		"/api/todos/{id}",
+		false,
 		false,
 		handlers.GetTodo,
 	},
@@ -41,6 +48,7 @@ var DefinedRoutes = Routes{
 		"PUT",
 		"/api/todos/{id}",
 		true,
+		false,
 		handlers.UpdateTodo,
 	},
 	Route{
@@ -48,12 +56,14 @@ var DefinedRoutes = Routes{
 		"Delete",
 		"/api/todos/{id}",
 		true,
+		false,
 		handlers.DeleteTodo,
 	},
 	Route{
 		"CreateUser",
 		"POST",
 		"/api/users",
+		false,
 		false,
 		handlers.CreateUser,
 	},
@@ -62,12 +72,14 @@ var DefinedRoutes = Routes{
 		"GET",
 		"/api/users",
 		false,
+		false,
 		handlers.GetAllUsers,
 	},
 	Route{
 		"LoginUsers",
 		"POST",
 		"/api/login",
+		false,
 		false,
 		handlers.AuthUsers,
 	},
@@ -76,6 +88,7 @@ var DefinedRoutes = Routes{
 		"GET",
 		"/api/users/{id}",
 		false,
+		false,
 		handlers.GetUser,
 	},
 	Route{
@@ -83,6 +96,7 @@ var DefinedRoutes = Routes{
 		"POST",
 		"/api/upload-todos",
 		true,
+		false,
 		handlers.UploadTodo,
 	},
 	Route{
@@ -90,6 +104,23 @@ var DefinedRoutes = Routes{
 		"GET",
 		"/",
 		false,
+		true,
 		handlers.RenderIndex,
 	},
+	Route{
+		"RenderHome",
+		"GET",
+		"/home",
+		false,
+		true,
+		handlers.RenderHome,
+	},
+}
+
+func NotFoundRoute(w http.ResponseWriter, r *http.Request) {
+	if strings.Contains(r.RequestURI, "/api/") {
+		handlers.ProcessJSON(w, http.StatusNotFound, []byte(`"NOT FOUND"`), utils.DATA_NOT_FOUND)
+	} else {
+		handlers.RenderNotFound(w, r)
+	}
 }

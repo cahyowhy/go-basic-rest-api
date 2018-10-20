@@ -46,7 +46,8 @@ export default Object.freeze({
 
       'MAIL_EXIST': '1201',
       'MAIL_NOT_FOUND': '1202',
-      'USERNAME_EXIST': '1203'
+      'USERNAME_EXIST': '1203',
+      'FAILED_SERIALIZE': '2100'
     }
   }
 });

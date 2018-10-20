@@ -1,8 +1,6 @@
-{% import "go-basic-rest-api/models" %}
-
 {% code
     type IndexPage struct {
-        Users models.Users
+        
     }
 %}
 
@@ -14,4 +12,10 @@
     <div class="login-page">
         <form-login></form-login>  
     </div>
+{% endfunc %}
+
+{% func (p *IndexPage) CSSExternal() %}
+{% endfunc %}
+
+{% func (p *IndexPage) ScriptExternal() %}
 {% endfunc %}

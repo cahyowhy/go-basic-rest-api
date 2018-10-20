@@ -4,16 +4,24 @@
         <section class="logo-wrp">
             <img class="is-rounded" src="/public/images/todo-logo.svg" alt="Todo">
         </section>
-        <form v-on:submit.prevent="doLogin" method="POST">
+        <form v-on:submit.prevent="doLoginRegister" method="POST">
+            <b-field v-if="isRegister" label="Name" :type="user.nameFeedback().type" :message="user.nameFeedback().error">
+                <b-input v-model="user.name" placeholder="e.g John Smith" maxlength="30"></b-input>
+            </b-field>
             <b-field label="Username" :type="user.usernameFeedback().type" :message="user.usernameFeedback().error">
-                <b-input v-model="user.username" maxlength="12"></b-input>
+                <b-input v-model="user.username" placeholder="e.g john_smith01" maxlength="12"></b-input>
             </b-field>
             <b-field label="Password" :type="user.passwordFeedback().type" :message="user.passwordFeedback().error">
-                <b-input type="password" v-model="user.password" password-reveal>
+                <b-input type="password" placeholder="Fill with valid password" v-model="user.password" password-reveal>
+                </b-input>
+            </b-field>
+            <b-field v-if="isRegister" label="Password Confirmation" :type="user.passwordConfirmFeedback().type" :message="user.passwordConfirmFeedback().error">
+                <b-input type="password" placeholder="Must same as password above" v-model="user.passwordConfirm" password-reveal>
                 </b-input>
             </b-field>
             <div class="has-text-centered field">
-                <input type="submit" value="Login" :class="`button is-${user.validLogin() ? 'info' : 'danger'}`" />
+                <input type="submit" value="Login" 
+                :class="`button is-${(isRegister ? user.valid() : user.validLogin()) ? 'info' : 'danger'}`" />
             </div>
         </form>
         <section class="has-text-centered">
@@ -30,14 +38,17 @@
 import { Vue, Component, Inject } from "annotation";
 import environment from "environment";
 import { isEmpty } from "lodash";
+import Constant from "../config/Constant";
 
 import User from "../models/User";
 
 import UserService from "../service/UserService";
+import CommonService from "../service/CommonService";
 
 @Component
 export default class FormLogin extends Vue {
   @Inject private userService: UserService;
+  @Inject private commonService: CommonService;
 
   private form: any = null;
 
@@ -50,18 +61,29 @@ export default class FormLogin extends Vue {
   }
 
   private mounted() {
-      console.log(this.$root.$el);
+      console.log(this.commonService.getUser());
   }
 
-  private async doLogin() {
+  private async doLoginRegister() {
+    const { isRegister } = this;
+    this.userService.returnWithStatus = true;
+
     if (this.user.validLogin()) {
-      const { username, password } = this.user;
-      const body = {
-        username,
-        password
-      };
-      const data = await this.userService.doLogin(body);
+      const method = isRegister ? "save" : "doLogin";
+      const payload = isRegister ? this.user : this.user.loginProperty();
+      const data = await this.userService[method](payload);
+      const status = (data || { status: "" }).status;
+
+      if (isRegister && status === Constant.STATUS.API.SAVE_SUCCESS) {
+        (window as any).Turbolinks.visit("/");
+      }
+
+      if (!isRegister && status === Constant.STATUS.API.LOGIN_SUCCESS) {
+        (window as any).Turbolinks.visit("home");
+      }
     }
+
+    this.userService.returnWithStatus = false;
   }
 }
 </script>

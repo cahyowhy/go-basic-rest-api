@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
+	"go-basic-rest-api/config"
 	"go-basic-rest-api/handlers"
 	"go-basic-rest-api/models"
-	"go-basic-rest-api/config"
 	"go-basic-rest-api/routes"
 	"go-basic-rest-api/utils"
 
@@ -36,6 +38,7 @@ func (app *App) Initialize(config *config.Config) {
 
 	app.DB.LogMode(true)
 	app.setRouters()
+	app.Router.NotFoundHandler = http.HandlerFunc(routes.NotFoundRoute)
 	app.Router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
 }
 
@@ -75,13 +78,37 @@ func (app *App) setRouters() {
 
 		var handler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
+			var fullUrl string = r.Host + r.RequestURI
+			var isIndexPath bool = false
+			
+			if !strings.HasPrefix(fullUrl, "http") || !strings.HasPrefix(fullUrl, "https") {
+				fullUrl = "http://" + fullUrl
+			}
+
+			urlParse, err := url.Parse(fullUrl)
+
 			log.Printf(
 				"%s\t%s\t%s\t%s",
 				r.Method,
-				r.RequestURI,
+				fullUrl,
 				newRoute.Name,
 				time.Since(start),
 			)
+
+			if err != nil {
+				log.Printf("err parse url %s %s", fullUrl, err.Error())
+			} else {
+				isIndexPath = urlParse.Path == "/"
+			}
+
+			redirectUnauthorize := func(err string, w http.ResponseWriter, r *http.Request, isIndex bool) {
+				if !isIndex {
+					log.Printf("err : %s", err)
+					http.Redirect(w, r, "/?login-first=true", http.StatusTemporaryRedirect)
+
+					return
+				}
+			}
 
 			if newRoute.AuthFirst {
 				if validHeaderAuth := utils.DecodedToken(r); validHeaderAuth != nil {
@@ -89,6 +116,34 @@ func (app *App) setRouters() {
 
 					return
 				}
+			}
+
+			if newRoute.AuthCookie {
+				cookie, err := r.Cookie("token")
+
+				if err == nil {
+					if validTokenCookie := utils.ValidToken(cookie.Value); !validTokenCookie {
+						// remove cookie if has cookie but failed auth
+						c := &http.Cookie{
+							Name:    "token",
+							Value:   "",
+							Path:    "/",
+							Expires: time.Unix(0, 0),
+
+							HttpOnly: true,
+						}
+						http.SetCookie(w, c)
+
+						redirectUnauthorize(utils.TOKEN_NOT_VALID, w, r, isIndexPath)
+					} else {
+						if isIndexPath {
+							http.Redirect(w, r, "/home", http.StatusPermanentRedirect)
+						}
+					}
+				} else {
+					redirectUnauthorize(err.Error(), w, r, isIndexPath)
+				}
+
 			}
 
 			newRoute.RouteHandle(app.DB, w, r)
