@@ -71,3 +71,12 @@ export function Task(target: any, propertyKey: string): void {
 export function Extend(target: any, propertyKey: string): void {
   mergeToComponent(target, propertyKey, 'extends', true, true);
 }
+
+
+/**
+ * For extend component
+ * usage: @Extend function() { return array }
+ */
+export function Components(target: any, propertyKey: string): void {
+  mergeToComponent(target, propertyKey, 'components', true, true);
+}

@@ -5,7 +5,7 @@
  * to inject or register anything can be here
  */
 
-import {Vue} from 'annotation';
+import { Vue } from 'annotation';
 import Constant from '../config/Constant';
 
 Vue.config.productionTip = false;

@@ -8,18 +8,22 @@ import (
 )
 
 func main() {
-	configApp := config.GetConfig()
 	var env = flag.String("env", "DEV", "type environment")
-	configApp.SetEnv(*env)
 
 	if *env == "PROD" {
 		godotenv.Load(".env.production")
+	} else {
+		godotenv.Load(".env.development")
 	}
 
-	godotenv.Load(".env.development")
+	configApp := config.GetConfig()
 
 	app := App{}
 	app.Initialize(configApp)
-	app.seedsDb()
+
+	if *env != "PROD" {
+		app.seedsDb()
+	}
+
 	app.Run(":3000")
 }

@@ -1,5 +1,26 @@
 @import "vars.scss";
 
+@mixin fl_row {
+    display: flex;
+    flex-direction: row;
+}
+
+@mixin fl_col {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin box_view($applyPadding: false) {
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+    background-color: white;
+    border-radius: 6px;
+    color: $grey-dark;
+
+    @if $applyPadding == true {
+        padding: 1.25rem;
+    }
+}
+
 #app {
     min-width: 100vw;
     min-height: 100vh;
@@ -9,6 +30,20 @@ img.is-rounded {
     border-radius: 50%;
 }
 
+p.help {
+    &.is-grey {
+        color: $grey;
+    }
+}
+
+.image.is-cover {
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
 .form-login-register {
     >section.logo-wrp {
         text-align: center;
@@ -16,6 +51,24 @@ img.is-rounded {
         img {
             width: 128px;
             height:  128px;
+        }
+    }
+}
+
+.empty-states {
+    @include fl_row();
+    >p {
+        flex: 1;
+    }
+    >span {
+        margin-right: .75rem;
+    }
+    &.is-vertical {
+        @include fl_col();
+        text-align: center;
+        span {
+            font-size: 80px;
+            margin: 0 0 .75rem 0;
         }
     }
 }
@@ -32,6 +85,111 @@ img.is-rounded {
         width: 100%;
         &:last-child {
             margin-top: 1.5rem;
+        }
+    }
+}
+
+.home-page {
+    background-color: $white-ter;
+    min-height: 100vh;
+    .columns {
+        margin: 0 auto;
+        max-width: 1024px;
+    }
+    .column .box {
+        position: relative;
+        padding: .75rem;
+    }
+    .file-upload-wrp {
+        @include fl_row();
+        label.upload.control:not(:only-child) a {
+            border-color: $grey-lighter;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        span.file-name {
+            flex: 1;
+            border-color: $grey-lighter;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+    .column {
+        &.is-two-thirds .bt-load {
+            @include box_view();
+            width: 100%;
+        }
+        &:not(.is-two-thirds) .box  {
+            .bt-load, .bt-upload {
+                border-radius: 0;
+                width: 100%;
+                border-top: 1px solid $grey-lighter;
+                box-shadow: none;
+                margin-top: .75rem;
+                color: $grey-dark;
+            }
+        }
+    }
+
+    .photo-view {
+        overflow: auto;
+        position: relative;
+        .image {
+            cursor: pointer;
+            float: left;
+            position: relative;
+            width: 30%;
+            padding-bottom: 30%;
+            margin: 1.66%;
+            position: relative;
+            img {
+                position: absolute;
+            }
+        }
+    }
+}
+
+.common-editor {
+    background: white;
+    padding: 1rem;
+    >.field {
+        margin: -1rem -1rem 1rem;
+        padding: .75rem;
+        background-color: white;
+        &:last-child {
+            p {
+                text-align: right;
+            }
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+    }
+    .menubar {
+        margin: -1rem -1rem .5rem;
+        padding: 1rem 1rem;
+        background-color: $grey-lighter;
+    }
+    .editor {
+        div[contenteditable="true"] {
+            min-height: 250px;
+        }
+        & + .field {
+            border-top: 1px solid $grey-lighter;
+            margin-top: .75rem;
+            padding-top: .75rem;
+        }
+    }
+}
+
+.todo-item {
+    .content {
+        .field {
+            @include fl_row();
+            margin-top: 1rem;
+
+            span:not(:last-child) {
+                margin: 0 .5rem;
+            }
         }
     }
 }

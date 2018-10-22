@@ -21,6 +21,12 @@ class App {
     private commonService: CommonService;
 
     init() {
+        (Date as any).prototype.addDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        };
+        
         const context: App = this;
         let el = '#app';
 

@@ -52,7 +52,7 @@ func (a *App) seedsDb() {
 
 	countUser := len(users)
 
-	if countUser < 100 {
+	if countUser < 50 {
 		for index := 0; index < 50; index++ {
 			user := models.User{}
 			user.FakeIt()
@@ -80,7 +80,7 @@ func (app *App) setRouters() {
 			start := time.Now()
 			var fullUrl string = r.Host + r.RequestURI
 			var isIndexPath bool = false
-			
+
 			if !strings.HasPrefix(fullUrl, "http") || !strings.HasPrefix(fullUrl, "https") {
 				fullUrl = "http://" + fullUrl
 			}

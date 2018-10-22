@@ -11,6 +11,10 @@ export default class User extends Base {
 
   @deserialize
   @serialize
+  public image_profile: string = "";
+
+  @deserialize
+  @serialize
   public username: string = "yPhillips";
 
   @deserialize

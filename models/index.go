@@ -6,8 +6,9 @@ import (
 )
 
 func DBMigrate(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Todo{}, &User{})
+	db.AutoMigrate(&Todo{}, &User{}, &UserPhoto{})
 	db.Model(&Todo{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	db.Model(&UserPhoto{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 
 	return db
 }

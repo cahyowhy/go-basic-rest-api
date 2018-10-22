@@ -21,7 +21,13 @@ func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Preload("User").Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&todos).Error; err != nil {
+	tx := db.Preload("User").Offset(query.Get("offset")).Limit(query.Get("limit"))
+
+	if query.Get("user_id") != "" {
+		tx = tx.Where("user_id = ?", query.Get("user_id"))
+	}
+
+	if err := tx.Find(&todos).Error; err != nil {
 		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
 
 		return
@@ -54,30 +60,6 @@ func CreateTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusCreated, todo, utils.SAVE_SUCCESS)
-}
-
-func UploadTodo(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	file, handle, err := r.FormFile("file")
-	if err != nil {
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-	defer file.Close()
-
-	mimeType := handle.Header.Get("Content-Type")
-	fmt.Println(mimeType)
-	switch mimeType {
-	case "multipart/form-data":
-		err = saveFile(file, handle)
-	default:
-		ProcessJSON(w, http.StatusBadRequest, []byte(`"invalid file format"`), utils.UPDATE_FAILED)
-	}
-
-	if err != nil {
-		ProcessJSON(w, http.StatusInternalServerError, []byte(`"Failed save file!"`), utils.UPDATE_FAILED)
-	}
-
-	ProcessJSON(w, http.StatusOK, []byte(`"Success Upload file"`), utils.UPLOAD_SUCCESS)
 }
 
 func GetTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {

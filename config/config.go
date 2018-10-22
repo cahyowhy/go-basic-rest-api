@@ -2,6 +2,7 @@ package config
 
 import (
 	"sync"
+	"os"
 )
 
 type DBConfig struct {
@@ -23,20 +24,16 @@ var once sync.Once
 func GetConfig() *Config {
 	once.Do(func() {
 		config = &Config{
-			ENV: "",
+			ENV: os.Getenv("ENV"),
 			DB: &DBConfig{
 				Dialect:  "mysql",
-				Username: "root",
-				Password: "root",
-				Name:     "todoapp",
+				Username: os.Getenv("DBUSERNAME"),
+				Password: os.Getenv("DBPASSWORD"),
+				Name:     os.Getenv("DBNAME"),
 				Charset:  "utf8",
 			},
 		}
 	})
 
 	return config;
-}
-
-func (config *Config) SetEnv(env string) {
-	config.ENV = env;
 }

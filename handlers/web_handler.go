@@ -25,29 +25,35 @@ func RenderNotFound(w http.ResponseWriter, r *http.Request) {
 	templates.WritePageTemplate(w, p)
 }
 
-func RenderHome(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
+func RenderHome(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
+	var userJson []byte
 	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 
 	mapClaims, ok := utils.GetTokenParsed(r)
 
 	if ok {
+		var err error
 		username, okUsername := mapClaims["username"].(string)
 
-		if okUsername && len(username) != 0 {
-
+		if err = db.First(&user, "username = ?", username).Error; err != nil && okUsername {
+			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+			return
 		}
+
+		if userJson, err = user.Serialize(); err != nil {
+			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+			return
+		}
+
+		p := &templates.HomePage{
+			User:     user,
+			UserJSON: userJson,
+		}
+
+		templates.WritePageTemplate(w, p)
+	} else {
+		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		return
 	}
-
-	// if err := db.Find(&users).Error; err != nil {
-	// 	respondError(w, http.StatusInternalServerError, "FAILED RENDER PAGE", utils.DATA_NOT_FOUND)
-
-	// 	return
-	// }
-
-	p := &templates.HomePage{
-		User: user,
-	}
-
-	templates.WritePageTemplate(w, p)
 }

@@ -13,4 +13,8 @@ declare module 'js-cookie';
 declare module 'base-64';
 declare module 'buefy';
 declare module 'crypto-js';
+declare module 'v-img-fallback';
 declare module 'secure-ls';
+declare module 'tiptap';
+declare module 'moment';
+declare module 'tiptap-extensions';

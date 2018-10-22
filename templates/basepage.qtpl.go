@@ -64,7 +64,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/css/app.css">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css">
     `)
 	//line basepage.qtpl:22
 	qw422016.N().S(p.CSSExternal())

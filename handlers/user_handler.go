@@ -119,3 +119,23 @@ func getUserOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request
 
 	return &user
 }
+
+func UploadPhotoProfile(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	userPhoto, err := uploadPhotoUserMixin(db, w, r)
+	if err != nil {
+		return
+	}
+
+	user := getUserOr404(db, string(userPhoto.UserID), w, r)
+	if user == nil {
+		return
+	}
+
+	user.ImageProfile = userPhoto.Path
+	if err := db.Save(&user).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, user, utils.UPDATE_SUCCESS)
+}

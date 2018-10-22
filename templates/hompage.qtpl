@@ -3,16 +3,17 @@
 {% code
     type HomePage struct {
         User models.User
+        UserJSON []byte
     }
 %}
 
 {% func (p *HomePage) Title() %}
-	Beranda {%s p.User.Username%}
+	Beranda {%s p.User.Name%}
 {% endfunc %}
 
 {% func (p *HomePage) Body() %}
     <div class="home-page">
-        <user-home></user-home>  
+        <user-home user="{%v string(p.UserJSON) %}"></user-home>  
     </div>
 {% endfunc %}
 

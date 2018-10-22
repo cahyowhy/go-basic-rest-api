@@ -60,10 +60,6 @@ export default class FormLogin extends Vue {
     return !isEmpty(query) && !isEmpty(query.register);
   }
 
-  private mounted() {
-      console.log(this.commonService.getUser());
-  }
-
   private async doLoginRegister() {
     const { isRegister } = this;
     this.userService.returnWithStatus = true;

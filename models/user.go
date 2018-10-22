@@ -14,14 +14,15 @@ import (
 )
 
 type User struct {
-	ID        uint       `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time  `json:"created_at,omitempty"`
-	UpdatedAt time.Time  `json:"updated_at,omitempty"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	Name      string     `json:"name"`
-	Username  string     `gorm:"not null;unique" json:"username"`
-	Password  string     `gorm:"not null" json:"password"`
-	Todos     []Todo     `gorm:"ForeignKey:TodoID" json:"todos,omitempty"`
+	ID           uint       `gorm:"primary_key" json:"id"`
+	CreatedAt    time.Time  `json:"created_at,omitempty"`
+	UpdatedAt    time.Time  `json:"updated_at,omitempty"`
+	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
+	Name         string     `json:"name"`
+	ImageProfile string     `json:"image_profile"`
+	Username     string     `gorm:"not null;unique" json:"username"`
+	Password     string     `gorm:"not null" json:"password"`
+	Todos        []Todo     `gorm:"ForeignKey:TodoID" json:"todos,omitempty"`
 }
 
 func (u User) Serialize() ([]byte, error) {
@@ -39,6 +40,13 @@ func (u User) Serialize() ([]byte, error) {
 	}
 
 	return clonedJson, err
+}
+
+func (u User) SerializeUploadImageProfile() ([]byte, error) {
+	var payload map[string]string;
+	payload["image_profile"] = u.ImageProfile
+
+	return json.Marshal(payload)
 }
 
 func (u User) ValidValue(checkLogin bool) bool {

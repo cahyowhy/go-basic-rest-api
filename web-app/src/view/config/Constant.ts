@@ -5,7 +5,10 @@
  */
 
 export default Object.freeze({
-
+  'DATE_PATTERN': 'DD/MM/YYYY',
+  'DATE_TIME_PATTERN': 'MMM DD, YYYY hh:mm:ss A',
+  'DATE_MONTH_DETAIL': 'DD MMMM YYYY',
+  
   'STATUS': {
     'HTTP': {
       'UNAUTHORIZED': '401'

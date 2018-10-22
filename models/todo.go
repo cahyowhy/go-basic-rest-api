@@ -15,6 +15,7 @@ type Todo struct {
 	UpdatedAt time.Time  `json:"updated_at,omitempty"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	Name      string     `json:"name"`
+	Content   string     `json:"content"`
 	Completed bool       `json:"completed"`
 	Due       *time.Time `gorm:"default:null" json:"due"`
 	UserID    uint       `json:"user_id"`
@@ -33,6 +34,7 @@ func (t *Todo) FakeIt() {
 	duration := time.Now().AddDate(1, 2, fake.Day())
 
 	t.Name = fake.Company()
+	t.Content = "<p>" + fake.WordsN(128) + "</p>"
 	t.Completed = false
 	t.Due = &duration
 }

@@ -57,9 +57,14 @@ func ValidToken(tokenString string) bool {
 }
 
 func GetTokenParsed(req *http.Request) (mapClaim jwt.MapClaims, ok bool) {
-	tokenString := req.Header.Get("Authorization")
+	var tokenString string
+	tokenCookie, err := req.Cookie("token")
 
-	if len(tokenString) == 0 {
+	if err != nil {
+		return nil, false
+	}
+
+	if tokenString = tokenCookie.Value; len(tokenString) == 0 {
 		return nil, false
 	}
 
