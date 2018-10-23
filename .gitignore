@@ -6,3 +6,4 @@ web-app/dist/
 public/css
 public/js
 files/*
+templates/*.go
