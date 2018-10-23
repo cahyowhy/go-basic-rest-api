@@ -88,6 +88,29 @@ p.help {
     }
 }
 
+.todo-page,
+.setting-page,
+.home-page {
+    background-color: white;
+    min-height: 100vh;
+    .columns {
+        max-width: 1024px;
+        margin: 0 auto;
+    }
+    .nav-wrp {
+        width: 100%;
+        overflow: auto;
+        display: block;
+        background: white;
+        margin-bottom: 1rem;
+        @include box_view(false, false);
+        nav {
+            margin: 0 auto;
+            max-width: 1024px;
+        }
+    }
+}
+
 .login-page {
     padding: 2rem 0;
     width: 500px;
@@ -105,6 +128,7 @@ p.help {
 }
 
 .home-page {
+    background-color: $white-ter;
     .column .box {
         position: relative;
         padding: .75rem;
@@ -290,29 +314,6 @@ p.help {
             span:not(:last-child) {
                 margin: 0 .5rem;
             }
-        }
-    }
-}
-
-.todo-page,
-.setting-page,
-.home-page {
-    background-color: $white-ter;
-    min-height: 100vh;
-    .columns {
-        max-width: 1024px;
-        margin: 0 auto;
-    }
-    .nav-wrp {
-        width: 100%;
-        overflow: auto;
-        display: block;
-        background: white;
-        margin-bottom: 1rem;
-        @include box_view(false, false);
-        nav {
-            margin: 0 auto;
-            max-width: 1024px;
         }
     }
 }

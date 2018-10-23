@@ -17,9 +17,21 @@ Page prints a page implementing Page interface.
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/css/app.css">
+    <link rel='shortcut icon' type='image/x-icon' href='/public/images/favicon.ico' />
+    <link rel="manifest" href="/public/manifest.json">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css">
     <meta name="og:site_name" content="Todo App"/>
+    <script type="text/javascript" src="/public/vendor/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/vendor/js/jquery.migrate.min.js"></script>
+    <script type="text/javascript" src="/public/js/app.js" defer></script>
+    <script type="text/javascript" src="/public/js/sw-controller.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            new SW();
+        });
+    </script>
     {%s= p.CSSExternal() %}
     {%s= p.MetaInfo() %}
 </head>
@@ -27,9 +39,6 @@ Page prints a page implementing Page interface.
 	<div id="app">
         {%s= p.Body() %}
     </div>
-    <script type="text/javascript" src="/public/vendor/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/public/vendor/js/jquery.migrate.min.js"></script>
-    <script type="text/javascript" src="/public/js/app.js"></script>
     {%s= p.ScriptExternal() %}
     {% if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" %}
         <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>

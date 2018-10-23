@@ -68,9 +68,20 @@
                 <div class="todo-item box" v-for="(todo, index) in todos" :key="'todo-item-'+index">
                     <div class="content">
                         <div>
-                            <p class="title is-5">
-                                <a :href="`/todo/${todo.name}`" data-turbolinks="false">{{todo.name}}</a>
-                            </p>
+                            <div class="level">
+                                <div class="level-left">
+                                    <p class="title is-5">
+                                        <a :href="`/todo/${todo.name}`" data-turbolinks-action="replace">{{todo.name}}</a>
+                                    </p>
+                                </div>
+                                <div class="level-right">
+                                    <a @click="doEdit(todo)" class="button is-small">
+                                        <span>
+                                            <i class="mdi mdi-circle-edit-outline"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="content-todo">
                                 <p>{{todo.subcontent}}</p>
                             </div>
@@ -210,16 +221,38 @@ export default class UserHome extends Vue {
     } else if (this.userPhoto.file && isUpload) {
       response = await this.userPhotoService.save(this.userPhoto);
     } else if (!isUpload && this.todo.valid()) {
-      response = await this.todoService.save(this.todo);
+      if (this.todo.id > 0) {
+        response = await this.todoService.update(
+          this.todo,
+          this.todo.id.toString()
+        );
+      } else {
+        response = await this.todoService.save(this.todo);
+      }
     }
 
-    if (response.status === Constant.STATUS.API.SAVE_SUCCESS) {
+    const { SAVE_SUCCESS, UPDATE_SUCCESS } = Constant.STATUS.API;
+    if (
+      response.status === SAVE_SUCCESS ||
+      response.status === UPDATE_SUCCESS
+    ) {
       this.doFind(0, !isNil(this.userPhoto.file));
       this.resetEntity(!isNil(userPhoto));
     }
 
     this.todoService.returnWithStatus = false;
     this.userPhotoService.returnWithStatus = false;
+  }
+
+  private async doEdit(todo: Todo) {
+    const response = await this.todoService.find("/" + todo.id);
+    if (response) {
+      this.todo = response;
+    } else {
+      this.todo = todo;
+    }
+
+    (this as any).$refs.commonEditor.setContent(this.todo.content);
   }
 }
 </script>

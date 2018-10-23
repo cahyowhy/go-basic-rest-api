@@ -1,0 +1,17 @@
+{
+  "name": "Todo App but u can read article",
+  "short_name": "Todo App",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#2879ea",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/public/images/128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

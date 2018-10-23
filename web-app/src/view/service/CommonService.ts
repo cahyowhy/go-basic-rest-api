@@ -30,18 +30,20 @@ export default class CommonService {
      *        will direct passing param as notifcation text, not from translation
      * @param error {boolean} is notification for error?
      */
-    public showNotification(params: any, custom = false, error: boolean = false) {
+    public showNotification(params: any, custom = false, error: boolean = false, paramOption: any = {}) {
         try {
             if (this.app && this.app.$snackbar !== undefined && params) {
                 const status: any = params.status !== undefined ? params.status : '0000';
-
-                this.app.$snackbar.open({
+                const options: any = {
                     duration: 3000,
                     queue: false,
                     message: custom ? params : this.app.$t(`notification.${status}`),
                     type: `is-${error ? 'danger' : custom ? 'info' : 'warning'}`,
                     position: 'is-top-right'
-                });
+                };
+                Object.assign(options, paramOption);
+
+                this.app.$snackbar.open(options);
             }
         } catch (e) {
             console.log(e);

@@ -21,7 +21,7 @@ func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx := db.Preload("User").Offset(query.Get("offset")).Limit(query.Get("limit"))
+	tx := db.Preload("User").Order("id DESC").Offset(query.Get("offset")).Limit(query.Get("limit"))
 
 	if query.Get("user_id") != "" {
 		tx = tx.Where("user_id = ?", query.Get("user_id"))

@@ -34,18 +34,18 @@ func RenderTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	var userJson []byte
 
 	if len(name) == 0 {
-		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		renderErrPage(w, r)
 		return
 	}
 
 	todo := models.Todo{}
 	if err = db.Preload("User").First(&todo, "name = ?", name).Error; err != nil {
-		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		renderErrPage(w, r)
 		return
 	}
 
 	if userJson, err = todo.User.Serialize(); err != nil {
-		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		renderErrPage(w, r)
 		return
 	}
 
@@ -87,6 +87,14 @@ func RenderSetting(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	templates.WritePageTemplate(w, p)
 }
 
+func renderErrPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
+	w.WriteHeader(http.StatusInternalServerError)
+	p := &templates.ErrorPage{}
+
+	templates.WritePageTemplate(w, p)
+}
+
 func getUserAuth(db *gorm.DB, w http.ResponseWriter, r *http.Request) (*models.User, []byte, error) {
 	user := models.User{}
 	var userJson []byte
@@ -99,13 +107,13 @@ func getUserAuth(db *gorm.DB, w http.ResponseWriter, r *http.Request) (*models.U
 		username, okUsername := mapClaims["username"].(string)
 
 		if err = db.First(&user, "username = ?", username).Error; err != nil && okUsername {
-			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+			renderErrPage(w, r)
 
 			return nil, nil, err
 		}
 
 		if userJson, err = user.Serialize(); err != nil {
-			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+			renderErrPage(w, r)
 
 			return nil, nil, err
 		}
@@ -113,7 +121,7 @@ func getUserAuth(db *gorm.DB, w http.ResponseWriter, r *http.Request) (*models.U
 		return &user, userJson, nil
 	}
 
-	respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+	renderErrPage(w, r)
 
 	return nil, nil, errors.New(`"Failed get user auth"`)
 }

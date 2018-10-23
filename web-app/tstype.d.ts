@@ -1,9 +1,3 @@
-declare module 'vue-turbolinks' {
-    import VueTurbolinks = require('vue-turbolinks')
-
-    export default VueTurbolinks;
-}
-
 declare module 'vue-i18n';
 declare module 'environment';
 declare module 'annotation';

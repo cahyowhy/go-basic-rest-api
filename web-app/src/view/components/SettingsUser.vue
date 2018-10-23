@@ -65,6 +65,7 @@
 import { Vue, Component, Inject, Prop } from "annotation";
 import { Deserialize } from "cerialize";
 import { isNil } from "lodash";
+import { timeout } from "../util/Delay";
 import UserService from "../service/UserService";
 import CommonService from "../service/CommonService";
 import Constant from "../config/Constant";
@@ -128,11 +129,18 @@ export default class SettingsUser extends Vue {
     }
 
     this.userService.returnWithStatus = false;
-    
-    if (
-      response.status === Constant.STATUS.API.UPDATE_SUCCESS &&
-      !isNil(response.data)
-    ) {
+    const updateSucceed =
+      response.status === Constant.STATUS.API.UPDATE_SUCCESS;
+
+    if (updateSucceed && !isNil(response.data)) {
+      this.commonService.showNotification(
+        "You'l be logged out for changing session",
+        true,
+        false,
+        { duration: 2000 }
+      );
+
+      await timeout(2000);
       this.commonService.removeUser();
     }
   }

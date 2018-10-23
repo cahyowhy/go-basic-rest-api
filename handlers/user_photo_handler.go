@@ -20,7 +20,7 @@ func GetUserPhoto(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Where("user_id = ?", query.Get("user_id")).Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&userPhotos).Error; err != nil {
+	if err := db.Where("user_id = ?", query.Get("user_id")).Order("id DESC").Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&userPhotos).Error; err != nil {
 		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
 
 		return
