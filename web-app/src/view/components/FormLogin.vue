@@ -12,7 +12,7 @@
                 <b-input v-model="user.name" placeholder="e.g John Smith" maxlength="30"></b-input>
             </b-field>
             <b-field label="Username" :type="user.usernameFeedback().type" :message="user.usernameFeedback().error">
-                <b-input v-model="user.username" placeholder="e.g john_smith01" maxlength="12"></b-input>
+                <b-input v-model="user.username" placeholder="e.g john_smith01" maxlength="30"></b-input>
             </b-field>
             <b-field label="Password" :type="user.passwordFeedback().type" :message="user.passwordFeedback().error">
                 <b-input type="password" placeholder="Fill with valid password" v-model="user.password" password-reveal>
@@ -23,7 +23,7 @@
                 </b-input>
             </b-field>
             <div class="has-text-centered field">
-                <input type="submit" value="Login" :class="`button is-${(isRegister ? user.valid() : user.validLogin()) ? 'info' : 'danger'}`" />
+                <input type="submit" value="Login" :class="`button is-${(isRegister ? user.validRegister() : user.validLogin()) ? 'info' : 'danger'}`" />
             </div>
         </form>
         <section class="has-text-centered">
@@ -50,9 +50,8 @@ import CommonService from "../service/CommonService";
 @Component
 export default class FormLogin extends Vue {
   @Inject private userService: UserService;
+  
   @Inject private commonService: CommonService;
-
-  private form: any = null;
 
   private user: User = new User();
 
@@ -83,7 +82,7 @@ export default class FormLogin extends Vue {
       }
 
       if (!isRegister && status === Constant.STATUS.API.LOGIN_SUCCESS) {
-        (window as any).Turbolinks.visit("home");
+        (window as any).location = "home";
       }
     }
 

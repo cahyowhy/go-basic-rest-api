@@ -32,7 +32,7 @@ abstract class BaseService {
    * @param T is instance current entity
    * @return {Promise<>}
    */
-  abstract update(T: EntityAware): Promise<any>;
+  abstract update(T: EntityAware, id: string): Promise<any>;
 
   /**
    * remove method to logic API delete

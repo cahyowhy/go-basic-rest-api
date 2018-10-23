@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/templates"
 	"go-basic-rest-api/utils"
@@ -57,6 +58,36 @@ func RenderTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func RenderHome(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	user, userJson, err := getUserAuth(db, w, r)
+
+	if err != nil {
+		return
+	}
+
+	p := &templates.HomePage{
+		User:     *user,
+		UserJSON: userJson,
+	}
+
+	templates.WritePageTemplate(w, p)
+}
+
+func RenderSetting(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	user, userJson, err := getUserAuth(db, w, r)
+
+	if err != nil {
+		return
+	}
+
+	p := &templates.SettingPage{
+		User:     *user,
+		UserJSON: userJson,
+	}
+
+	templates.WritePageTemplate(w, p)
+}
+
+func getUserAuth(db *gorm.DB, w http.ResponseWriter, r *http.Request) (*models.User, []byte, error) {
 	user := models.User{}
 	var userJson []byte
 	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
@@ -69,22 +100,20 @@ func RenderHome(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 
 		if err = db.First(&user, "username = ?", username).Error; err != nil && okUsername {
 			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
-			return
+
+			return nil, nil, err
 		}
 
 		if userJson, err = user.Serialize(); err != nil {
 			respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
-			return
+
+			return nil, nil, err
 		}
 
-		p := &templates.HomePage{
-			User:     user,
-			UserJSON: userJson,
-		}
-
-		templates.WritePageTemplate(w, p)
-	} else {
-		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
-		return
+		return &user, userJson, nil
 	}
+
+	respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+
+	return nil, nil, errors.New(`"Failed get user auth"`)
 }

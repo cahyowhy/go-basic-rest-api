@@ -52,6 +52,14 @@ var DefinedRoutes = Routes{
 		handlers.UpdateTodo,
 	},
 	Route{
+		"UpdateUser",
+		"PUT",
+		"/api/users/{id}",
+		true,
+		false,
+		handlers.UpdateUser,
+	},
+	Route{
 		"DeleteTodo",
 		"Delete",
 		"/api/todos/{id}",
@@ -100,6 +108,14 @@ var DefinedRoutes = Routes{
 		handlers.UploadUserPhoto,
 	},
 	Route{
+		"Upload User Password",
+		"PUT",
+		"/api/update-user-password",
+		true,
+		false,
+		handlers.UpdateUserPassword,
+	},
+	Route{
 		"Get User Photo",
 		"GET",
 		"/api/user-photos",
@@ -122,6 +138,14 @@ var DefinedRoutes = Routes{
 		false,
 		true,
 		handlers.RenderIndex,
+	},
+	Route{
+		"RenderSettings",
+		"GET",
+		"/setting",
+		false,
+		true,
+		handlers.RenderSetting,
 	},
 	Route{
 		"RenderTodo",

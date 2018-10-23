@@ -75,8 +75,9 @@ abstract class ProxyService extends BaseService {
    * @param {EntityAware} T entity which implement EntityAware
    * @return {Promise<any>} promise response from api request
    */
-  public update(T: EntityAware): Promise<any> {
-    return this.put(Serialize(T)).then((response: any) =>
+  public update(T: EntityAware, id: string): Promise<any> {
+    const api = this.api + '/' + id;
+    return this.put(Serialize(T), api).then((response: any) =>
       this.returnWithStatus ? response : response.data);
   }
 
@@ -271,7 +272,7 @@ abstract class ProxyService extends BaseService {
         context.commonService.showNotification(response.data);
         context.disableNotification = false;
       }
-      
+
       return response.data;
     }).catch(err => {
       // if err and response status 401, logout user

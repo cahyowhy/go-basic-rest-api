@@ -2,6 +2,7 @@ import User from "./User";
 import Base from "./Base";
 import moment from 'moment';
 import Constant from '../config/Constant';
+import htmlTagToText from '../util/HtmlToTag';
 import {
   deserialize,
   inheritSerialization,
@@ -18,6 +19,10 @@ export default class Todo extends Base {
   @serialize
   @deserialize
   public content: string = '';
+
+  @serialize
+  @deserialize
+  public subcontent: string = '';
 
   @serialize
   @deserialize
@@ -76,6 +81,10 @@ export default class Todo extends Base {
 
     if (instance.user.id === 0) {
       delete json.user;
+    }
+
+    if (instance.content) {
+      json.subcontent = htmlTagToText(instance.content).substring(0, 128);
     }
   }
 

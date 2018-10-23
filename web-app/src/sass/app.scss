@@ -36,6 +36,11 @@ nav.navbar {
     }
 }
 
+.turbolinks-progress-bar {
+    height: 5px;
+    background-color: $info;
+}
+
 img.is-rounded {
     border-radius: 50%;
 }
@@ -100,12 +105,6 @@ p.help {
 }
 
 .home-page {
-    background-color: $white-ter;
-    min-height: 100vh;
-    .columns {
-        margin: 0 auto;
-        max-width: 1024px;
-    }
     .column .box {
         position: relative;
         padding: .75rem;
@@ -122,18 +121,6 @@ p.help {
             border-color: $grey-lighter;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
-        }
-    }
-    .nav-wrp {
-        width: 100%;
-        overflow: auto;
-        display: block;
-        background: white;
-        margin-bottom: 1rem;
-        @include box_view(false, false);
-        .userhome-navbar {
-            margin: 0 auto;
-            max-width: 1024px;
         }
     }
     .column {
@@ -307,8 +294,25 @@ p.help {
     }
 }
 
-.todo-page {
-    max-width: 1024px;
-    margin: 0 auto;
-    padding: 1.5rem 0;
+.todo-page,
+.setting-page,
+.home-page {
+    background-color: $white-ter;
+    min-height: 100vh;
+    .columns {
+        max-width: 1024px;
+        margin: 0 auto;
+    }
+    .nav-wrp {
+        width: 100%;
+        overflow: auto;
+        display: block;
+        background: white;
+        margin-bottom: 1rem;
+        @include box_view(false, false);
+        nav {
+            margin: 0 auto;
+            max-width: 1024px;
+        }
+    }
 }

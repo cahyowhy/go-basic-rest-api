@@ -32,10 +32,8 @@ class App {
 
         Turbolinks.start();
         document.addEventListener('turbolinks:load', () => {
-            console.log('here');
             (window as any).appPreview = new Vue({
-                el,
-                i18n,
+                el, i18n,
                 beforeMount: function () {
                     if (this.$el.parentNode) {
                         handleVueDestruction(this);

@@ -11,11 +11,14 @@
     <title>Todo {%s p.Todo.Name%}</title>
     <meta name="og:title" content="{%s p.Todo.Name %}"/>
     <meta name="og:type" content="article"/>
-    <meta name="og:description" content="{%s p.Todo.Content[0:128] %}"/>
+    <meta name="og:description" content="{%s p.Todo.Subcontent %}"/>
 {% endfunc %}
 
 {% func (p *TodoPage) Body() %}
     <div class="todo-page">
+        <div class="nav-wrp">
+            <navigation-bar />
+        </div>
        <div class="columns">
         <div class="column">
             <user-badge user="{%v string(p.UserJSON) %}"/>
@@ -36,4 +39,14 @@
 {% endfunc %}
 
 {% func (p *TodoPage) ScriptExternal() %}
+<script>
+    window.addEventListener( "pageshow", function ( event ) {
+        var historyTraversal = event.persisted ||  ( typeof window.performance != "undefined" &&  window.performance.navigation.type === 2 );
+        
+        if ( historyTraversal ) {
+            // Handle page restore.
+            window.location.reload();
+        }
+    });
+</script>
 {% endfunc %}

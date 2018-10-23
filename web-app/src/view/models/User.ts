@@ -1,7 +1,7 @@
 import Base from "./Base";
 import Todo from "./Todo";
+import {keysIn} from "lodash";
 import { deserialize, inheritSerialization, serialize } from "cerialize";
-import { keysIn } from 'lodash';
 
 @inheritSerialization(Base)
 export default class User extends Base {
@@ -15,11 +15,15 @@ export default class User extends Base {
 
   @deserialize
   @serialize
-  public username: string = "yPhillips";
+  public username: string = "";
 
   @deserialize
   @serialize
-  public password: string = "1234";
+  public password: string = "";
+
+  @deserialize
+  @serialize
+  public passwordOld: string = "";
 
   @deserialize
   public todos: Array<Todo> = [];
@@ -27,8 +31,11 @@ export default class User extends Base {
   @deserialize
   public token: string = "";
 
+  @serialize
   @deserialize
   public passwordConfirm: string = "";
+
+  public file: any = null;
 
   public nameFeedback(): any {
     const valid = this.name.length > 4;
@@ -46,6 +53,18 @@ export default class User extends Base {
     const valid = this.password.length > 3;
     const type = `is-${valid ? 'success' : 'danger'}`;
     const error = valid ? "" : "Password must be at least 4 char";
+
+    return {
+      type,
+      valid,
+      error
+    };
+  }
+
+  public passwordOldFeedback(): any {
+    const valid = this.passwordOld.length > 3;
+    const type = `is-${valid ? 'success' : 'danger'}`;
+    const error = valid ? "" : "passwordOld must be at least 4 char";
 
     return {
       type,
@@ -82,7 +101,16 @@ export default class User extends Base {
     return this.usernameFeedback().valid && this.passwordFeedback().valid;
   }
 
+  public validUpdatePassword(): boolean {
+    return this.passwordOldFeedback().valid && this.passwordConfirmFeedback().valid &&
+      this.passwordFeedback().valid;
+  }
+
   public valid(): boolean {
+    return this.nameFeedback().valid && this.usernameFeedback().valid;
+  }
+
+  public validRegister(): boolean {
     return keysIn(this).filter((prop: string) => prop.toLowerCase().includes('feedback'))
       .every((prop: string) => this[prop]().valid);
   }
@@ -94,7 +122,7 @@ export default class User extends Base {
   }
 
   public static OnDeserialized(instance: User, json: any): void {
-    if (json.path) {
+    if (json.image_profile) {
       instance.image_profile = "/user-files/" + json.image_profile;
     }
   }

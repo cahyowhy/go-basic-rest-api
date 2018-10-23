@@ -7,11 +7,13 @@
 
 import { Singleton } from 'annotation';
 import environment from 'environment';
-
+import { Serialize } from 'cerialize';
+import { isNil } from 'lodash';
 import ProxyService from './Proxy';
 
 import EntityAware from '../models/EntityAware';
 import User from '../models/User';
+import UserPhoto from '../models/UserPhoto';
 
 @Singleton
 export default class UserService extends ProxyService {
@@ -31,5 +33,28 @@ export default class UserService extends ProxyService {
 
       return response;
     });
+  }
+
+  public updateUserPassword(T: EntityAware): Promise<any> {
+    const api = environment['API_URL'] + '/update-user-password';
+
+    return this.put(T, api).then((response: any) => this.returnWithStatus ? response : response.data);
+  }
+
+  public uploadImageProfile(entity: UserPhoto): Promise<any> {
+    const api = environment['API_URL'] + '/upload-photo-profiles';
+    const param: FormData = new FormData();
+    let paramJson: any = Serialize(entity, UserPhoto);
+    const file = (<any>entity).file;
+
+    if (!isNil(file)) {
+      param.append('file', file);
+    }
+
+
+    param.append('userPhoto', JSON.stringify(paramJson));
+
+    return this.post(param, api, { 'Content-Type': 'multipart/form-data' })
+      .then((response: any) => this.convertResponse(response, this.returnWithStatus));
   }
 }

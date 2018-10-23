@@ -37,5 +37,4 @@ export default class UserPhotoService extends ProxyService {
     return this.post(param, this.api, { 'Content-Type': 'multipart/form-data' })
       .then((response: any) => this.convertResponse(response, this.returnWithStatus));
   }
-
 }

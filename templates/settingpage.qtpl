@@ -1,0 +1,27 @@
+{% import "go-basic-rest-api/models" %}
+
+{% code
+    type SettingPage struct {
+        User models.User
+        UserJSON []byte
+    }
+%}
+
+{% func (p *SettingPage) MetaInfo() %}
+    <title>Setting profile {%s p.User.Name %}</title>
+    <meta name="og:title" content="Setting profile {%s p.User.Name %}"/>
+    <meta name="og:type" content="article"/>
+    <meta name="og:description" content="Setting profile {%s p.User.Name %}"/>
+{% endfunc %}
+
+{% func (p *SettingPage) Body() %}
+    <div class="setting-page">
+        <settings-user user="{%v string(p.UserJSON) %}"/>
+    </div>
+{% endfunc %}
+
+{% func (p *SettingPage) CSSExternal() %}
+{% endfunc %}
+
+{% func (p *SettingPage) ScriptExternal() %}
+{% endfunc %}

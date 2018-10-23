@@ -6,6 +6,7 @@ import (
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -126,7 +127,8 @@ func UploadPhotoProfile(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := getUserOr404(db, string(userPhoto.UserID), w, r)
+	userId := fmt.Sprint(userPhoto.UserID)
+	user := getUserOr404(db, userId, w, r)
 	if user == nil {
 		return
 	}
@@ -138,4 +140,84 @@ func UploadPhotoProfile(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, user, utils.UPDATE_SUCCESS)
+}
+
+func UpdateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	id := vars["id"]
+	intId, err := strconv.ParseUint(id, 10, 32)
+
+	if id == "" || err != nil {
+		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
+		return
+	}
+
+	user := models.User{ID: uint(intId)}
+	decoder := json.NewDecoder(r.Body)
+
+	if err := decoder.Decode(&user); err != nil || (len(user.Name) == 0 && len(user.Username) == 0) {
+		respondError(w, http.StatusBadRequest, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	defer r.Body.Close()
+
+	if err := db.Model(&user).Omit("password").Updates(user).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	userData := getUserOr404(db, id, w, r)
+	if userData == nil {
+		return
+	}
+
+	respondJSON(w, http.StatusOK, userData, utils.UPDATE_SUCCESS)
+}
+
+func UpdateUserPassword(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	var user map[string]interface{} = make(map[string]interface{})
+
+	decoder := json.NewDecoder(r.Body)
+
+	if err := decoder.Decode(&user); err != nil {
+		respondError(w, http.StatusBadRequest, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	defer r.Body.Close()
+
+	id, _ := user["id"].(string)
+	passwordOld, _ := user["passwordOld"].(string)
+	password, _ := user["password"].(string)
+
+	if len(id) == 0 || len(passwordOld) == 0 || len(password) == 0 {
+		respondError(w, http.StatusBadRequest, `"Required passwordOld, password & id but not present"`, utils.INPUT_NOT_VALID)
+		return
+	}
+
+	userStored := getUserOr404(db, id, w, r)
+	if userStored == nil {
+		return
+	}
+
+	isMatch := utils.CompareHashPassword(passwordOld, userStored.Password)
+	if !isMatch {
+		respondError(w, http.StatusUnauthorized, `"Password not valid!"`, utils.PASSWORD_NOT_VALID)
+		return
+	}
+
+	newPassword, errPass := utils.GeneratePassword(password)
+	if errPass != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, errPass.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	if err := db.Model(userStored).Update("password", newPassword).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPDATE_FAILED)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, userStored, utils.UPDATE_SUCCESS)
 }

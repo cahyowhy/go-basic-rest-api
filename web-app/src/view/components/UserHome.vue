@@ -2,11 +2,11 @@
 <template>
     <div>
         <div class="nav-wrp">
-            <navigation-bar class="userhome-navbar" />
+            <navigation-bar />
         </div>
         <div class="columns">
             <div class="column">
-                <user-badge :user="userData"/>
+                <user-badge :user="userData" />
                 <div class="box">
                     <p class="title is-6">Upload User Foto</p>
                     <div class="file-upload-wrp">
@@ -69,9 +69,11 @@
                     <div class="content">
                         <div>
                             <p class="title is-5">
-                                <a data-turbolinks-action="replace" :href="`/todo/${todo.name}`">{{todo.name}}</a>
+                                <a :href="`/todo/${todo.name}`" data-turbolinks="false">{{todo.name}}</a>
                             </p>
-                            <div class="content-todo" v-html="todo.content"></div>
+                            <div class="content-todo">
+                                <p>{{todo.subcontent}}</p>
+                            </div>
                             <div class="field">
                                 <p class="help is-grey">{{todo.user.name}}</p>
                                 <span>•</span>
@@ -154,17 +156,19 @@ export default class UserHome extends Vue {
     if (isPhoto) {
       const userPhotos = await this.userPhotoService.find(param);
       if (offset === 0) {
-          this.userPhotos = [];
+        this.userPhotos = [];
       }
 
-      this.userPhotos = this.userPhotos.concat(Array.isArray(userPhotos) ? userPhotos : []);
+      this.userPhotos = this.userPhotos.concat(
+        Array.isArray(userPhotos) ? userPhotos : []
+      );
       this.hasMoreUserPhoto =
         userPhotos.length % environment["LIMIT"] === 0 &&
         userPhotos.length !== 0;
     } else {
       const todos = await this.todoService.find(param);
       if (offset === 0) {
-          this.todos = [];
+        this.todos = [];
       }
 
       this.todos = this.todos.concat(Array.isArray(todos) ? todos : []);
@@ -199,7 +203,10 @@ export default class UserHome extends Vue {
 
     if (!isNil(userPhoto)) {
       response = await this.userPhotoService.save(userPhoto);
-      (this as any).$refs.commonEditor.setContent(this.todo.content + `<p class="has-text-centered"><img src="${response.data.path}" /></p>`);
+      (this as any).$refs.commonEditor.setContent(
+        this.todo.content +
+          `<p class="has-text-centered"><img src="${response.data.path}" /></p>`
+      );
     } else if (this.userPhoto.file && isUpload) {
       response = await this.userPhotoService.save(this.userPhoto);
     } else if (!isUpload && this.todo.valid()) {

@@ -18,6 +18,7 @@
                         </span>
                     </p>
                 </div>
+                <slot/>
             </div>
         </article>
     </div>
