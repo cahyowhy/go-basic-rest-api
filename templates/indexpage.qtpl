@@ -4,8 +4,8 @@
     }
 %}
 
-{% func (p *IndexPage) Title() %}
-	Todos Websites
+{% func (p *IndexPage) MetaInfo() %}
+	<title>Todos Websites</title>
 {% endfunc %}
 
 {% func (p *IndexPage) Body() %}

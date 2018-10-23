@@ -1,5 +1,4 @@
 @import "vars.scss";
-
 @mixin fl_row {
     display: flex;
     flex-direction: row;
@@ -10,20 +9,31 @@
     flex-direction: column;
 }
 
-@mixin box_view($applyPadding: false) {
+@mixin box_view($applyPadding: false, $applyBorderRadius: true) {
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
     background-color: white;
-    border-radius: 6px;
     color: $grey-dark;
-
-    @if $applyPadding == true {
+    @if $applyPadding==true {
         padding: 1.25rem;
+    }
+    @if $applyPadding==true {
+        border-radius: 6px;
     }
 }
 
 #app {
     min-width: 100vw;
     min-height: 100vh;
+}
+
+nav.navbar {
+    .navbar-item img {
+        max-height: none;
+        &+span {
+            margin-left: .75rem;
+            font-weight: bold;
+        }
+    }
 }
 
 img.is-rounded {
@@ -50,7 +60,7 @@ p.help {
         margin-bottom: 1.5rem;
         img {
             width: 128px;
-            height:  128px;
+            height: 128px;
         }
     }
 }
@@ -114,13 +124,26 @@ p.help {
             border-bottom-left-radius: 0;
         }
     }
+    .nav-wrp {
+        width: 100%;
+        overflow: auto;
+        display: block;
+        background: white;
+        margin-bottom: 1rem;
+        @include box_view(false, false);
+        .userhome-navbar {
+            margin: 0 auto;
+            max-width: 1024px;
+        }
+    }
     .column {
         &.is-two-thirds .bt-load {
             @include box_view();
             width: 100%;
         }
-        &:not(.is-two-thirds) .box  {
-            .bt-load, .bt-upload {
+        &:not(.is-two-thirds) .box {
+            .bt-load,
+            .bt-upload {
                 border-radius: 0;
                 width: 100%;
                 border-top: 1px solid $grey-lighter;
@@ -130,7 +153,6 @@ p.help {
             }
         }
     }
-
     .photo-view {
         overflow: auto;
         position: relative;
@@ -168,15 +190,107 @@ p.help {
         margin: -1rem -1rem .5rem;
         padding: 1rem 1rem;
         background-color: $grey-lighter;
+        &.is-fixed {
+            position: fixed;
+            top: 15px;
+        }
+        .button {
+            padding-bottom: calc(0.375em - 1px);
+            padding-left: calc(0.625em - 1px);
+            padding-right: calc(0.625em - 1px);
+        }
+        label.upload.control input {
+            height: 36px;
+            width: 36px;
+            top: 0;
+            z-index: 1;
+            cursor: pointer;
+        }
     }
     .editor {
+        .menubar .button.is-active {
+            background-color: $grey-dark;
+            color: white;
+            i {
+                color: white;
+            }
+        }
+        position: relative;
         div[contenteditable="true"] {
             min-height: 250px;
         }
-        & + .field {
+        &+.field {
             border-top: 1px solid $grey-lighter;
             margin-top: .75rem;
             padding-top: .75rem;
+        }
+        .editor__floating-menu {
+            &.opacity-0 {
+                opacity: 0 !important;
+            }
+            position: absolute;
+            margin-top: -0.25rem;
+            visibility: hidden;
+            opacity: 0;
+            &:not(.opacity-0) {
+                transition: opacity 0.2s, visibility 0.2s;
+            }
+        }
+        pre {
+            &::before {
+                content: attr(data-language);
+                text-transform: uppercase;
+                display: block;
+                text-align: right;
+                font-weight: bold;
+                font-size: 0.6rem;
+            }
+            code {
+                .hljs-comment,
+                .hljs-quote {
+                    color: #999999;
+                }
+                .hljs-variable,
+                .hljs-template-variable,
+                .hljs-attribute,
+                .hljs-tag,
+                .hljs-name,
+                .hljs-regexp,
+                .hljs-link,
+                .hljs-name,
+                .hljs-selector-id,
+                .hljs-selector-class {
+                    color: #f2777a;
+                }
+                .hljs-number,
+                .hljs-meta,
+                .hljs-built_in,
+                .hljs-builtin-name,
+                .hljs-literal,
+                .hljs-type,
+                .hljs-params {
+                    color: #f99157;
+                }
+                .hljs-string,
+                .hljs-symbol,
+                .hljs-bullet {
+                    color: #99cc99;
+                }
+                .hljs-title,
+                .hljs-section {
+                    color: #ffcc66;
+                }
+                .hljs-keyword,
+                .hljs-selector-tag {
+                    color: #6699cc;
+                }
+                .hljs-emphasis {
+                    font-style: italic;
+                }
+                .hljs-strong {
+                    font-weight: 700;
+                }
+            }
         }
     }
 }
@@ -186,10 +300,15 @@ p.help {
         .field {
             @include fl_row();
             margin-top: 1rem;
-
             span:not(:last-child) {
                 margin: 0 .5rem;
             }
         }
     }
+}
+
+.todo-page {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 1.5rem 0;
 }

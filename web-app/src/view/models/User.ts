@@ -92,4 +92,10 @@ export default class User extends Base {
 
     return { username, password };
   }
+
+  public static OnDeserialized(instance: User, json: any): void {
+    if (json.path) {
+      instance.image_profile = "/user-files/" + json.image_profile;
+    }
+  }
 }

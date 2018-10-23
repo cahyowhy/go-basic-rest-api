@@ -47,6 +47,8 @@ export default class Todo extends Base {
     return date;
   })();
 
+  public todoFileImage: any = null;
+
   public nameFeedback(): any {
     const valid = this.name.length > 4;
     const type = `is-${valid ? 'success' : 'danger'}`;

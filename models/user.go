@@ -10,7 +10,6 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/icrowley/fake"
-	"github.com/tidwall/sjson"
 )
 
 type User struct {
@@ -25,25 +24,39 @@ type User struct {
 	Todos        []Todo     `gorm:"ForeignKey:TodoID" json:"todos,omitempty"`
 }
 
+func (u *User) ToMap() map[string]interface{} {
+	var userMap map[string]interface{} = make(map[string]interface{})
+
+	userMap["id"] = u.ID
+	userMap["created_at"] = u.CreatedAt
+	userMap["name"] = u.Name
+	userMap["image_profile"] = u.ImageProfile
+	userMap["username"] = u.Username
+
+	if len(u.Todos) != 0 {
+		var todoMaps []map[string]interface{} = make([]map[string]interface{}, len(u.Todos))
+
+		for i, todo := range u.Todos {
+			todoMap := todo.ToMap()
+			delete(todoMap, "user")
+			delete(todoMap, "subcontent")
+			delete(todoMap, "content")
+
+			todoMaps[i] = todoMap
+		}
+
+		userMap["todos"] = todoMaps
+	}
+
+	return userMap
+}
+
 func (u User) Serialize() ([]byte, error) {
-	jsonVal, err := json.Marshal(u)
-	clonedJson := jsonVal
-	emits := []string{}
-
-	emits = append(emits, "password")
-	for index, _ := range u.Todos {
-		emits = append(emits, "todos."+strconv.Itoa(index)+".user")
-	}
-
-	for _, element := range emits {
-		clonedJson, err = sjson.DeleteBytes(clonedJson, element)
-	}
-
-	return clonedJson, err
+	return json.Marshal(u.ToMap())
 }
 
 func (u User) SerializeUploadImageProfile() ([]byte, error) {
-	var payload map[string]string;
+	var payload map[string]string = make(map[string]string)
 	payload["image_profile"] = u.ImageProfile
 
 	return json.Marshal(payload)
@@ -88,22 +101,17 @@ func (u *User) FakeIt() {
 type Users []User
 
 func SerializeUsers(users []User) ([]byte, error) {
-	jsonVal, err := json.Marshal([]User{})
-	clonedJson := jsonVal
-
-	for index, user := range users {
-		userJson, _ := user.Serialize()
-		clonedJson, err = sjson.SetRawBytes(clonedJson, strconv.Itoa(index), userJson)
+	var userMaps []map[string]interface{} = make([]map[string]interface{}, len(users))
+	for i, user := range users {
+		userMaps[i] = user.ToMap()
 	}
 
-	return clonedJson, err
+	return json.Marshal(userMaps)
 }
 
 func (u User) MergeToken(token string) ([]byte, error) {
-	jsonInitial, err := u.Serialize()
+	userMap := u.ToMap()
+	userMap["token"] = token
 
-	clonedJson := jsonInitial
-	clonedJson, err = sjson.SetBytes(clonedJson, "token", token)
-
-	return clonedJson, err
+	return json.Marshal(userMap)
 }

@@ -22,31 +22,31 @@ type IndexPage struct {
 }
 
 //line indexpage.qtpl:7
-func (p *IndexPage) StreamTitle(qw422016 *qt422016.Writer) {
+func (p *IndexPage) StreamMetaInfo(qw422016 *qt422016.Writer) {
 	//line indexpage.qtpl:7
 	qw422016.N().S(`
-	Todos Websites
+	<title>Todos Websites</title>
 `)
 //line indexpage.qtpl:9
 }
 
 //line indexpage.qtpl:9
-func (p *IndexPage) WriteTitle(qq422016 qtio422016.Writer) {
+func (p *IndexPage) WriteMetaInfo(qq422016 qtio422016.Writer) {
 	//line indexpage.qtpl:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
 	//line indexpage.qtpl:9
-	p.StreamTitle(qw422016)
+	p.StreamMetaInfo(qw422016)
 	//line indexpage.qtpl:9
 	qt422016.ReleaseWriter(qw422016)
 //line indexpage.qtpl:9
 }
 
 //line indexpage.qtpl:9
-func (p *IndexPage) Title() string {
+func (p *IndexPage) MetaInfo() string {
 	//line indexpage.qtpl:9
 	qb422016 := qt422016.AcquireByteBuffer()
 	//line indexpage.qtpl:9
-	p.WriteTitle(qb422016)
+	p.WriteMetaInfo(qb422016)
 	//line indexpage.qtpl:9
 	qs422016 := string(qb422016.B)
 	//line indexpage.qtpl:9

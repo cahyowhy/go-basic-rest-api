@@ -22,31 +22,31 @@ type NotFoundPage struct {
 }
 
 //line notfoundpage.qtpl:7
-func (p *NotFoundPage) StreamTitle(qw422016 *qt422016.Writer) {
+func (p *NotFoundPage) StreamMetaInfo(qw422016 *qt422016.Writer) {
 	//line notfoundpage.qtpl:7
 	qw422016.N().S(`
-	404 Page Not Found
+	<title>404 Page Not Found</title>
 `)
 //line notfoundpage.qtpl:9
 }
 
 //line notfoundpage.qtpl:9
-func (p *NotFoundPage) WriteTitle(qq422016 qtio422016.Writer) {
+func (p *NotFoundPage) WriteMetaInfo(qq422016 qtio422016.Writer) {
 	//line notfoundpage.qtpl:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
 	//line notfoundpage.qtpl:9
-	p.StreamTitle(qw422016)
+	p.StreamMetaInfo(qw422016)
 	//line notfoundpage.qtpl:9
 	qt422016.ReleaseWriter(qw422016)
 //line notfoundpage.qtpl:9
 }
 
 //line notfoundpage.qtpl:9
-func (p *NotFoundPage) Title() string {
+func (p *NotFoundPage) MetaInfo() string {
 	//line notfoundpage.qtpl:9
 	qb422016 := qt422016.AcquireByteBuffer()
 	//line notfoundpage.qtpl:9
-	p.WriteTitle(qb422016)
+	p.WriteMetaInfo(qb422016)
 	//line notfoundpage.qtpl:9
 	qs422016 := string(qb422016.B)
 	//line notfoundpage.qtpl:9

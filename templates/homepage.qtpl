@@ -7,8 +7,8 @@
     }
 %}
 
-{% func (p *HomePage) Title() %}
-	Beranda {%s p.User.Name%}
+{% func (p *HomePage) MetaInfo() %}
+	<title>Beranda {%s p.User.Name%}</title>
 {% endfunc %}
 
 {% func (p *HomePage) Body() %}

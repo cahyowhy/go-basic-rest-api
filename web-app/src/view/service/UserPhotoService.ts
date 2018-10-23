@@ -7,8 +7,8 @@
 
 import { Singleton } from 'annotation';
 import environment from 'environment';
-import {Serialize} from 'cerialize';
-import {isNil} from 'lodash';
+import { Serialize } from 'cerialize';
+import { isNil } from 'lodash';
 
 import ProxyService from './Proxy';
 
@@ -34,7 +34,8 @@ export default class UserPhotoService extends ProxyService {
 
     param.append('userPhoto', JSON.stringify(paramJson));
 
-    return this.post(param, this.api, {'Content-Type': 'multipart/form-data'});
+    return this.post(param, this.api, { 'Content-Type': 'multipart/form-data' })
+      .then((response: any) => this.convertResponse(response, this.returnWithStatus));
   }
 
 }

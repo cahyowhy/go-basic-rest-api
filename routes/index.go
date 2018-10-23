@@ -124,6 +124,14 @@ var DefinedRoutes = Routes{
 		handlers.RenderIndex,
 	},
 	Route{
+		"RenderTodo",
+		"GET",
+		"/todo/{name}",
+		false,
+		false,
+		handlers.RenderTodo,
+	},
+	Route{
 		"RenderHome",
 		"GET",
 		"/home",

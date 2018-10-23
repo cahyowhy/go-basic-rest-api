@@ -122,7 +122,7 @@ func uploadPhotoUserMixin(db *gorm.DB, w http.ResponseWriter, r *http.Request) (
 
 	filename := randstr.Hex(16) + handle.Filename
 	mimeType := r.Header.Get("Content-Type")
-	allowedFormatFiles := []string{"jpg", "png", "gif"}
+	allowedFormatFiles := []string{"jpg", "png", "gif", "jpeg"}
 
 	if !strings.Contains(mimeType, "multipart/form-data") {
 		ProcessJSON(w, http.StatusBadRequest, []byte(`"invalid file header"`), utils.UPLOAD_FAILED)

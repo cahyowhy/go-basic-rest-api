@@ -4,8 +4,8 @@
     }
 %}
 
-{% func (p *NotFoundPage) Title() %}
-	404 Page Not Found
+{% func (p *NotFoundPage) MetaInfo() %}
+	<title>404 Page Not Found</title>
 {% endfunc %}
 
 {% func (p *NotFoundPage) Body() %}

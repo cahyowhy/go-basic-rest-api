@@ -5,3 +5,4 @@ web-app/node_modules/
 web-app/dist/
 public/css
 public/js
+files/*

@@ -4,8 +4,9 @@ import (
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/templates"
 	"go-basic-rest-api/utils"
-
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/jinzhu/gorm"
 )
@@ -21,6 +22,36 @@ func RenderNotFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 	w.WriteHeader(http.StatusNotFound)
 	p := &templates.NotFoundPage{}
+
+	templates.WritePageTemplate(w, p)
+}
+
+func RenderTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
+	var err error
+	var userJson []byte
+
+	if len(name) == 0 {
+		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		return
+	}
+
+	todo := models.Todo{}
+	if err = db.Preload("User").First(&todo, "name = ?", name).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		return
+	}
+
+	if userJson, err = todo.User.Serialize(); err != nil {
+		respondError(w, http.StatusInternalServerError, `"HOLD REDIRECT ERR PAGE"`, utils.DATA_NOT_FOUND)
+		return
+	}
+
+	p := &templates.TodoPage{
+		Todo:     todo,
+		UserJSON: userJson,
+	}
 
 	templates.WritePageTemplate(w, p)
 }

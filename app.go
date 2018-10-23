@@ -40,6 +40,7 @@ func (app *App) Initialize(config *config.Config) {
 	app.setRouters()
 	app.Router.NotFoundHandler = http.HandlerFunc(routes.NotFoundRoute)
 	app.Router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+	app.Router.PathPrefix("/user-files/").Handler(http.StripPrefix("/user-files/", http.FileServer(http.Dir("./files/"))))
 }
 
 func (a *App) Run(host string) {

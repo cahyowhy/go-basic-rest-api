@@ -1,6 +1,9 @@
 <!--suppress ALL -->
 <template>
     <section class="form-login-register">
+        <b-notification v-if="isLoginFirst" type="is-info" has-icon>
+            Anda harus masuk terlebih dahulu!
+        </b-notification>
         <section class="logo-wrp">
             <img class="is-rounded" src="/public/images/todo-logo.svg" alt="Todo">
         </section>
@@ -20,8 +23,7 @@
                 </b-input>
             </b-field>
             <div class="has-text-centered field">
-                <input type="submit" value="Login" 
-                :class="`button is-${(isRegister ? user.valid() : user.validLogin()) ? 'info' : 'danger'}`" />
+                <input type="submit" value="Login" :class="`button is-${(isRegister ? user.valid() : user.validLogin()) ? 'info' : 'danger'}`" />
             </div>
         </form>
         <section class="has-text-centered">
@@ -58,6 +60,12 @@ export default class FormLogin extends Vue {
     const query = (this as any).$root.route.query;
 
     return !isEmpty(query) && !isEmpty(query.register);
+  }
+
+  private get isLoginFirst() {
+    const query = (this as any).$root.route.query;
+    
+    return !isEmpty(query) && !isEmpty(query["login-first"]);
   }
 
   private async doLoginRegister() {

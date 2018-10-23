@@ -17,6 +17,7 @@ export default class UserPhoto extends Base {
   @deserializeAs(User)
   public user: User = new User();
 
+  @serialize
   @deserialize
   public user_id: number = 0;
 
@@ -24,7 +25,13 @@ export default class UserPhoto extends Base {
 
   public static OnDeserialized(instance: UserPhoto, json: any): void {
     if (json.path) {
-      instance.path = "/file-users/" + json.path;
+      instance.path = "/user-files/" + json.path;
     }
+  }
+
+  public static OnSerialized(instance: UserPhoto, json: any): void {
+    ['path', 'user'].forEach(item => {
+      delete json[item];
+    });
   }
 }

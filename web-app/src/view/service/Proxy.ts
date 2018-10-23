@@ -51,8 +51,9 @@ abstract class ProxyService extends BaseService {
    * @return {Promise<any>} promise response from api request
    */
   public save(T: EntityAware): Promise<any> {
-    return this.post(Serialize(T)).then((response: any) =>
-      this.returnWithStatus ? response : response.data);
+    return this.post(Serialize(T)).then((response: any) => {
+      return this.convertResponse(response, this.returnWithStatus);
+    });
   }
 
   /**
@@ -251,18 +252,18 @@ abstract class ProxyService extends BaseService {
       context.commonService.app.countAjaxBeingRequest++;
     }
 
-    if (param instanceof FormData) {
-      const indexAt = context.commonService.app.pushUploadNotifications();
-      config.onUploadProgress = (event: any) => {
-        const { total, loaded } = event;
-        let percentComplete = (loaded / total) * 100;
-        context.commonService.app.notificationUploads[indexAt].percentage = percentComplete;
-        // remove if 100%
-        if (percentComplete >= 100) {
-          context.commonService.app.notificationUploads.splice(indexAt, 1);
-        }
-      }
-    }
+    // if (param instanceof FormData) {
+    //   const indexAt = context.commonService.app.pushUploadNotifications();
+    //   config.onUploadProgress = (event: any) => {
+    //     const { total, loaded } = event;
+    //     let percentComplete = (loaded / total) * 100;
+    //     context.commonService.app.notificationUploads[indexAt].percentage = percentComplete;
+    //     // remove if 100%
+    //     if (percentComplete >= 100) {
+    //       context.commonService.app.notificationUploads.splice(indexAt, 1);
+    //     }
+    //   }
+    // }
 
     return axios(config).then((response: any) => {
       // if method equal get and header not empty (for validate token), show notification of status

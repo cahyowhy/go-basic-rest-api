@@ -1,0 +1,39 @@
+{% import "go-basic-rest-api/models" %}
+
+{% code
+    type TodoPage struct {
+        Todo models.Todo
+        UserJSON []byte
+    }
+%}
+
+{% func (p *TodoPage) MetaInfo() %}
+    <title>Todo {%s p.Todo.Name%}</title>
+    <meta name="og:title" content="{%s p.Todo.Name %}"/>
+    <meta name="og:type" content="article"/>
+    <meta name="og:description" content="{%s p.Todo.Content[0:128] %}"/>
+{% endfunc %}
+
+{% func (p *TodoPage) Body() %}
+    <div class="todo-page">
+       <div class="columns">
+        <div class="column">
+            <user-badge user="{%v string(p.UserJSON) %}"/>
+        </div>
+        <div class="column is-three-quarters">
+            <p class="title is-5">
+                {%s p.Todo.Name%}
+            </p>
+            <div class="content">
+                {%s= p.Todo.Content %}
+            </div>
+        </div>
+       </div>
+    </div>
+{% endfunc %}
+
+{% func (p *TodoPage) CSSExternal() %}
+{% endfunc %}
+
+{% func (p *TodoPage) ScriptExternal() %}
+{% endfunc %}
