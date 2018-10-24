@@ -1,0 +1,89 @@
+{
+	"ImportPath": "go-basic-rest-api",
+	"GoVersion": "go1.11",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/corpix/uarand",
+			"Rev": "2b8494104d86337cdd41d0a49cbed8e4583c0ab4"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v3.2.0-4-g3af4c74",
+			"Rev": "3af4c746e1c248ee8491a3e0c6f7a9cd831e95f8"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.4.0-5-g99ff426",
+			"Rev": "99ff426eb706cffe92ff3d058e168b278cabf7c7"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.6.2-9-g9e1f595",
+			"Rev": "9e1f5955c0d22b55d9e20d6faa28589f83b2faca"
+		},
+		{
+			"ImportPath": "github.com/icrowley/fake",
+			"Rev": "4178557ae428460c3780a381c824a1f3aceb6325"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Comment": "v1.9.1-18-g3245508",
+			"Rev": "32455088f24d6b1e9a502fb8e40fdc16139dbea8"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm/dialects/mysql",
+			"Comment": "v1.9.1-18-g3245508",
+			"Rev": "32455088f24d6b1e9a502fb8e40fdc16139dbea8"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/inflection",
+			"Rev": "04140366298a54a039076d798123ffa108fff46c"
+		},
+		{
+			"ImportPath": "github.com/joho/godotenv",
+			"Comment": "v1.3.0-2-gc0b86d6",
+			"Rev": "c0b86d615e06d6fa5f869364d68f774ba49a86e3"
+		},
+		{
+			"ImportPath": "github.com/thanhpk/randstr",
+			"Comment": "v1.0.2-3-gc5a0f26",
+			"Rev": "c5a0f26468db1b2f953bd3e2364a8af3105cfd2e"
+		},
+		{
+			"ImportPath": "github.com/tidwall/gjson",
+			"Comment": "v1.1.3",
+			"Rev": "1e3f6aeaa5bad08d777ea7807b279a07885dd8b2"
+		},
+		{
+			"ImportPath": "github.com/tidwall/match",
+			"Rev": "1731857f09b1f38450e2c12409748407822dc6be"
+		},
+		{
+			"ImportPath": "github.com/tidwall/sjson",
+			"Comment": "v1.0.2",
+			"Rev": "48d34adceb39a5bd6ed7c12f38c78cd425436442"
+		},
+		{
+			"ImportPath": "github.com/valyala/bytebufferpool",
+			"Comment": "v1.0.0-1-gcdfbe93",
+			"Rev": "cdfbe9377474227bb42120c1e22fd4433e7f69bf"
+		},
+		{
+			"ImportPath": "github.com/valyala/quicktemplate",
+			"Comment": "v1.0.0-5-gdc50ff9",
+			"Rev": "dc50ff9977a68a543145ce34e0e0030bebcc89be"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "e3636079e1a4c1f337f212cc5cd2aca108f6c900"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "e3636079e1a4c1f337f212cc5cd2aca108f6c900"
+		}
+	]
+}
