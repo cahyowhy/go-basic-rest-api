@@ -3,6 +3,6 @@ debug
 .idea/
 web-app/node_modules/
 web-app/dist/
-public/css
-public/js
+public/css/app.css
+public/js/app.js
 templates/*.go
