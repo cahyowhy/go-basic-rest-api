@@ -1,1 +1,1 @@
-./before-deploy.sh && ./go-basic-rest-api -env=DEV
+cd templates && qtc && cd .. && cd web-app && npm run development && cd .. && go build && ./go-basic-rest-api -env=DEV
