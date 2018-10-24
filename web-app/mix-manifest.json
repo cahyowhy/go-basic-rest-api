@@ -1,4 +1,6 @@
 {
     "/dist/js/app.js": "/dist/js/app.js",
-    "/dist/css/app.css": "/dist/css/app.css"
+    "/dist/css/app.css": "/dist/css/app.css",
+    "/home/cahyo/go/src/go-basic-rest-api/public/vendor/js/non-priority.vendor.js": "/home/cahyo/go/src/go-basic-rest-api/public/vendor/js/non-priority.vendor.js",
+    "/home/cahyo/go/src/go-basic-rest-api/public/vendor/css/non-priority.vendor.css": "/home/cahyo/go/src/go-basic-rest-api/public/vendor/css/non-priority.vendor.css"
 }

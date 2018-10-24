@@ -30,5 +30,4 @@ export default class Base implements EntityAware {
     const createdDate = json.created_at || new Date().toDateString();
     instance.created_at = moment(new Date(createdDate)).format(Constant.DATE_PATTERN);
   }
-
 }

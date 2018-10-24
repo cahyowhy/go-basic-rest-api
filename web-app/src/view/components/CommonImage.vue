@@ -1,6 +1,6 @@
 <!--suppress ALL -->
 <template>
-<img :src="src" v-img-fallback="imageCallback">
+  <img :src="src" :href="src" v-img-fallback="imageCallback">
 </template>
 
 <script lang="ts">
@@ -14,11 +14,20 @@ export default class CommonImage extends Vue {
   @Prop({ default: false })
   private isProfile: boolean;
 
+  @Prop({ default: true })
+  private isMagnified: boolean;
+
+  private mounted() {
+    (window as any).$(this.$el).magnificPopup({
+      type: "image"
+    });
+  }
+
   private get imageCallback() {
     const error = `/public/images/${
       this.isProfile ? "default-user.jpg" : "no-img-found.png"
     }`;
-    
+
     return {
       loading: "/public/images/loading.gif",
       error

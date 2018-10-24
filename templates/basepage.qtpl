@@ -11,6 +11,7 @@ interface Page {
 
 Page prints a page implementing Page interface.
 {% func PageTemplate(p Page) %}
+{% collapsespace %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,12 +40,16 @@ Page prints a page implementing Page interface.
 	<div id="app">
         {%s= p.Body() %}
     </div>
+    <link rel="stylesheet" href="/public/vendor/css/non-priority.vendor.css">
+    <script type="text/javascript" src="/public/vendor/js/non-priority.vendor.js"></script>
     {%s= p.ScriptExternal() %}
     {% if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" %}
         <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
     {% endif %}
+    
 </body>
 </html>
+{% endcollapsespace %}
 {% endfunc %}
 
 Base page implementation. Other pages may inherit from it if they need

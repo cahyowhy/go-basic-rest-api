@@ -1,0 +1,21 @@
+{% code
+    type AdminPage struct {
+        
+    }
+%}
+
+{% func (p *AdminPage) MetaInfo() %}
+    <title>Admin page</title>
+{% endfunc %}
+
+{% func (p *AdminPage) Body() %}
+    <div class="admin-page">
+        <admin-page/>
+    </div>
+{% endfunc %}
+
+{% func (p *AdminPage) CSSExternal() %}
+{% endfunc %}
+
+{% func (p *AdminPage) ScriptExternal() %}
+{% endfunc %}

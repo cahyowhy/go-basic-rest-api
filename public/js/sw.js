@@ -4,12 +4,14 @@
  *  supaya browser tahu bahwa
  *  ada perubahan terbaru
  */
-const cacheVersion = 'todo-app';
+const cacheVersion = 'todo-app-2';
 const filesToCache = [
   '/',
   '/public/css/app.css',
   '/public/js/app.js',
   '/public/vendor/js/jquery.min.js',
+  '/public/vendor/css/non-priority.vendor.css',
+  '/public/vendor/js/non-priority.vendor.js',
   '/public/vendor/js/jquery.migrate.min.js',
 ];
 

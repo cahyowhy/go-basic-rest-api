@@ -33,6 +33,8 @@ func RenderTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	var err error
 	var userJson []byte
 
+	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
+
 	if len(name) == 0 {
 		renderErrPage(w, r)
 		return
@@ -59,6 +61,7 @@ func RenderTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 
 func RenderHome(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	user, userJson, err := getUserAuth(db, w, r)
+	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 
 	if err != nil {
 		return
@@ -73,6 +76,7 @@ func RenderHome(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func RenderSetting(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
 	user, userJson, err := getUserAuth(db, w, r)
 
 	if err != nil {
@@ -84,6 +88,13 @@ func RenderSetting(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		UserJSON: userJson,
 	}
 
+	templates.WritePageTemplate(w, p)
+}
+
+func RenderAdmin(_ *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html;charset=UTF-8")
+
+	p := &templates.AdminPage{}
 	templates.WritePageTemplate(w, p)
 }
 

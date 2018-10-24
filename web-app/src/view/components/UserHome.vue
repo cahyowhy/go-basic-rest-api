@@ -29,18 +29,21 @@
                                 <common-image :src="userPhoto.path" />
                             </p>
                         </div>
-                        <a @click="() => hasMoreUserPhoto ? doFind(userPhotos.length, true) : null" class="button is-white bt-load">
+                        <a @click="() => hasMoreUserPhoto ? doFind(userPhotos.length, 'USER_PHOTO') : null" class="button is-white bt-load">
                             {{hasMoreUserPhoto ? 'Cari' : 'Tak ada lagi konten dimuat'}}
                         </a>
                     </template>
                     <empty-states v-else :isVertical="true" />
                 </div>
+                <div class="box has-text-centered">
+                    <a class="button is-white" href="/admin" data-turbolinks-action="replace">Lihat Admin</a>
+                </div>
             </div>
             <div class="column is-two-thirds">
                 <div class="box">
-                    <p class="title is-6">Example autocomplete buefy</p>
+                    <p class="title is-6">{{(selectedUser || {username:''}).username.length > 0 ? `Selected user is ${(selectedUser || {username:''}).username}` : 'Example autocomplete buefy'}}</p>
                     <b-field label="Find a user">
-                        <b-autocomplete v-model="username" :data="userDatas" placeholder="e.g. Will smith" field="username" :loading="isFetching" @keyup.native="doFindUser" @select="option => userSelected = option">
+                        <b-autocomplete v-model="username" :data="userDatas" placeholder="e.g. Will smith" field="username" :loading="isFetching" @keyup.native="onTypingUser" @select="option => selectedUser = option">
                             <template slot-scope="props">
                                 <div class="media">
                                     <div class="media-left">
@@ -55,6 +58,14 @@
                                         </small>
                                     </div>
                                 </div>
+                            </template>
+                            <template slot="empty">
+                                <empty-states />
+                            </template>
+                            <template slot="header">
+                                <a @click="doFind(userDatas.length, 'USER')">
+                                    <span> Load more </span>
+                                </a>
                             </template>
                         </b-autocomplete>
                     </b-field>
@@ -128,7 +139,7 @@
 import { Vue, Component, Prop, Inject } from "annotation";
 import { Deserialize } from "cerialize";
 import environment from "environment";
-import { isEmpty, isNil, debounce } from "lodash";
+import { isEmpty, isNil, debounce, uniqBy } from "lodash";
 import Constant from "../config/Constant";
 
 import TodoService from "../service/TodoService";
@@ -156,7 +167,7 @@ export default class UserHome extends Vue {
   private userService: UserService;
 
   private hasMoreTodo: boolean = true;
-  
+
   private isFetching: boolean = false;
 
   private username: string = "";
@@ -172,8 +183,8 @@ export default class UserHome extends Vue {
   private userPhotos: Array<UserPhoto> = [];
 
   private userData: User = new User();
-  
-  private userDatas: Array<User> = []];
+
+  private userDatas: Array<User> = [];
 
   private selectedUser: User = new User();
 
@@ -190,10 +201,12 @@ export default class UserHome extends Vue {
 
   private async mounted() {
     await this.doFind();
-    await this.doFind(0, true);
+    await this.doFind(0, "USER_PHOTO");
   }
 
-  private async doFind(offset: number = 0, isPhoto: boolean = false) {
+  private async doFind(offset: number = 0, type: string = "TODOS") {
+    this.isFetching = true;
+
     const user_id = this.userData.id;
     const param = {
       offset,
@@ -201,28 +214,52 @@ export default class UserHome extends Vue {
       user_id
     };
 
-    if (isPhoto) {
-      const userPhotos = await this.userPhotoService.find(param);
-      if (offset === 0) {
-        this.userPhotos = [];
-      }
+    switch (type) {
+      case "USER_PHOTO":
+        const userPhotos = await this.userPhotoService.find(param);
+        if (offset === 0) {
+          this.userPhotos = [];
+        }
 
-      this.userPhotos = this.userPhotos.concat(
-        Array.isArray(userPhotos) ? userPhotos : []
-      );
-      this.hasMoreUserPhoto =
-        userPhotos.length % environment["LIMIT"] === 0 &&
-        userPhotos.length !== 0;
-    } else {
-      const todos = await this.todoService.find(param);
-      if (offset === 0) {
-        this.todos = [];
-      }
+        this.userPhotos = this.userPhotos.concat(
+          Array.isArray(userPhotos) ? userPhotos : []
+        );
+        this.hasMoreUserPhoto =
+          userPhotos.length % environment["LIMIT"] === 0 &&
+          userPhotos.length !== 0;
 
-      this.todos = this.todos.concat(Array.isArray(todos) ? todos : []);
-      this.hasMoreTodo =
-        todos.length % environment["LIMIT"] === 0 && todos.length !== 0;
+        break;
+      case "USER":
+        const paramUser = {
+          offset: 0,
+          limit: environment["LIMIT"],
+          username: this.username
+        };
+        const users = await this.userService.find(paramUser);
+        if (offset === 0) {
+          this.userDatas = [];
+        }
+
+        this.userDatas = uniqBy(
+          this.userDatas.concat(Array.isArray(users) ? users : []),
+          "id"
+        );
+
+        break;
+      default:
+        const todos = await this.todoService.find(param);
+        if (offset === 0) {
+          this.todos = [];
+        }
+
+        this.todos = this.todos.concat(Array.isArray(todos) ? todos : []);
+        this.hasMoreTodo =
+          todos.length % environment["LIMIT"] === 0 && todos.length !== 0;
+
+        break;
     }
+
+    this.isFetching = false;
   }
 
   private onUploadToEditor(files: any) {
@@ -273,7 +310,7 @@ export default class UserHome extends Vue {
       response.status === SAVE_SUCCESS ||
       response.status === UPDATE_SUCCESS
     ) {
-      this.doFind(0, !isNil(this.userPhoto.file));
+      this.doFind(0, "USER_PHOTO");
       this.resetEntity(!isNil(userPhoto));
     }
 
@@ -292,20 +329,14 @@ export default class UserHome extends Vue {
     (this as any).$refs.commonEditor.setContent(this.todo.content);
   }
 
-  private doFindUser: any = debounce(function () {
-      if (!this.username.length) {
-        this.userDatas = [];
-        
-        return
-      }
+  private onTypingUser: any = debounce(function() {
+    if (!this.username.length) {
+      this.userDatas = [];
 
-      this.isFetching = true;
-      const param = {offset: 0, limit: environment["LIMIT"], username: this.username};
-      
-      this.userService.find(param).then((responses: any) => {
-          this.userDatas = Array.isArray(responses) ? responses : [];
-          this.isFetching = false;
-      });
+      return;
+    }
+
+    this.doFind(0, "USER").then();
   });
 }
 </script>
