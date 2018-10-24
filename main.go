@@ -28,6 +28,7 @@ func main() {
 		app.seedsDb()
 		port = "3000"
 	} else {
+		//heroku use default port from env vars
 		port = os.Getenv("PORT")
 	}
 

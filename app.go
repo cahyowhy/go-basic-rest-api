@@ -27,7 +27,6 @@ func (app *App) Initialize(config *config.Config) {
 	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True",
 		config.DB.Username, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.Name,
 		config.DB.Charset)
-	fmt.Println(dbURI)
 
 	db, err := gorm.Open(config.DB.Dialect, dbURI)
 	if err != nil {
