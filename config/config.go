@@ -1,8 +1,8 @@
 package config
 
 import (
-	"sync"
 	"os"
+	"sync"
 )
 
 type DBConfig struct {
@@ -11,11 +11,13 @@ type DBConfig struct {
 	Password string
 	Name     string
 	Charset  string
+	Host     string
+	Port     string
 }
 
 type Config struct {
 	ENV string
-	DB *DBConfig
+	DB  *DBConfig
 }
 
 var config *Config
@@ -30,10 +32,12 @@ func GetConfig() *Config {
 				Username: os.Getenv("DBUSERNAME"),
 				Password: os.Getenv("DBPASSWORD"),
 				Name:     os.Getenv("DBNAME"),
+				Host:     os.Getenv("DBHOST"),
+				Port:     os.Getenv("DBPORT"),
 				Charset:  "utf8",
 			},
 		}
 	})
 
-	return config;
+	return config
 }

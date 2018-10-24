@@ -1,6 +1,6 @@
 import base from './base.env';
 
-let API_URL = 'http://localhost:3000/api';
+let API_URL = 'https://secret-peak-15363.herokuapp.com/api';
 let API_USER = API_URL + '/users';
 let API_TODO = API_URL + '/todos';
 let API_USER_PHOTO = API_URL + '/user-photos';

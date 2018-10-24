@@ -3,12 +3,15 @@ package main
 import (
 	"flag"
 	"go-basic-rest-api/config"
+	"os"
 
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	var env = flag.String("env", "DEV", "type environment")
+	var port string
+	flag.Parse()
 
 	if *env == "PROD" {
 		godotenv.Load(".env.production")
@@ -23,7 +26,11 @@ func main() {
 
 	if *env != "PROD" {
 		app.seedsDb()
+		port = "3000"
+	} else {
+		//heroku use default port from env vars
+		port = os.Getenv("PORT")
 	}
 
-	app.Run(":3000")
+	app.Run(":" + port)
 }
