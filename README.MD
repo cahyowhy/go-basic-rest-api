@@ -18,4 +18,4 @@ Also thereis a webapp folder
 -   run => npm run production to build the webapp
 
 u can see example here
-http://https://secret-peak-15363.herokuapp.com
+https://secret-peak-15363.herokuapp.com
