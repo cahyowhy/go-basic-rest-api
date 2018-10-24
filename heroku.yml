@@ -6,4 +6,4 @@ build:
     - go
 
 run:
-  web: go-basic-rest-api
+  web: go-basic-rest-api -env="PROD"

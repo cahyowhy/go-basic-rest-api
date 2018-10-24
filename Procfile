@@ -1,1 +1,1 @@
-web: go-basic-rest-api
+web: go-basic-rest-api -env="PROD"
