@@ -3,6 +3,3 @@ debug
 .idea/
 web-app/node_modules/
 web-app/dist/
-public/css
-public/js
-templates/*.go
