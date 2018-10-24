@@ -78,7 +78,13 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Offset(query.Get("offset")).Limit(query.Get("limit")).Find(&users).Error; err != nil {
+	tx := db.Offset(query.Get("offset")).Limit(query.Get("limit"))
+
+	if query.Get("username") != "" {
+		tx = tx.Where("username Like ?", "%"+query.Get("username")+"%")
+	}
+
+	if err := tx.Find(&users).Error; err != nil {
 		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
 
 		return

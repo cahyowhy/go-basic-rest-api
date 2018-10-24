@@ -5,6 +5,9 @@ golang, vue, turbolinks todo app
 ![N|Solid](/public/images/128x128.png)
 
 Create todoapp db in your mysql, u can change the env
+
+and then make sure u has installed (quicktemplate for compiling our templates/qtpl files) https://github.com/valyala/quicktemplate/tree/master/qtc  (i cloned the repo, build it then export the binary into bashrc )
+
 .env.development for dev & .env.production for prod
 
 Run ./build-dev.sh to turn on web server on dev

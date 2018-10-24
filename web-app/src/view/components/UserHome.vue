@@ -37,6 +37,29 @@
                 </div>
             </div>
             <div class="column is-two-thirds">
+                <div class="box">
+                    <p class="title is-6">Example autocomplete buefy</p>
+                    <b-field label="Find a user">
+                        <b-autocomplete v-model="username" :data="userDatas" placeholder="e.g. Will smith" field="username" :loading="isFetching" @keyup.native="doFindUser" @select="option => userSelected = option">
+                            <template slot-scope="props">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <common-image width="32" :src="props.option.image_profile" :isProfile="true" />
+                                    </div>
+                                    <div class="media-content">
+                                        {{ props.option.username }}
+                                        <br>
+                                        <small>
+                                            Name {{props.option.name}}
+                                            Created at {{ props.option.created_at }},
+                                        </small>
+                                    </div>
+                                </div>
+                            </template>
+                        </b-autocomplete>
+                    </b-field>
+                </div>
+
                 <common-editor v-model="todo.content" ref="commonEditor" @update="({html})=> todo.content = html">
                     <template slot="customMenubar">
                         <b-upload @input="onUploadToEditor" v-model="todo.todoFileImage">
@@ -93,7 +116,6 @@
                         </div>
                     </div>
                 </div>
-
                 <a @click="() => hasMoreTodo ? doFind(todos.length) : null" class="button is-white bt-load">
                     {{hasMoreTodo ? 'Cari' : 'Tak ada lagi konten dimuat'}}
                 </a>
@@ -106,10 +128,11 @@
 import { Vue, Component, Prop, Inject } from "annotation";
 import { Deserialize } from "cerialize";
 import environment from "environment";
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isNil, debounce } from "lodash";
 import Constant from "../config/Constant";
 
 import TodoService from "../service/TodoService";
+import UserService from "../service/UserService";
 import UserPhotoService from "../service/UserPhotoService";
 
 import User from "../models/User";
@@ -123,10 +146,20 @@ export default class UserHome extends Vue {
   })
   private user: string;
 
-  @Inject private todoService: TodoService;
-  @Inject private userPhotoService: UserPhotoService;
+  @Inject
+  private todoService: TodoService;
+
+  @Inject
+  private userPhotoService: UserPhotoService;
+
+  @Inject
+  private userService: UserService;
 
   private hasMoreTodo: boolean = true;
+  
+  private isFetching: boolean = false;
+
+  private username: string = "";
 
   private hasMoreUserPhoto: boolean = true;
 
@@ -139,6 +172,10 @@ export default class UserHome extends Vue {
   private userPhotos: Array<UserPhoto> = [];
 
   private userData: User = new User();
+  
+  private userDatas: Array<User> = []];
+
+  private selectedUser: User = new User();
 
   private created() {
     try {
@@ -254,5 +291,21 @@ export default class UserHome extends Vue {
 
     (this as any).$refs.commonEditor.setContent(this.todo.content);
   }
+
+  private doFindUser: any = debounce(function () {
+      if (!this.username.length) {
+        this.userDatas = [];
+        
+        return
+      }
+
+      this.isFetching = true;
+      const param = {offset: 0, limit: environment["LIMIT"], username: this.username};
+      
+      this.userService.find(param).then((responses: any) => {
+          this.userDatas = Array.isArray(responses) ? responses : [];
+          this.isFetching = false;
+      });
+  });
 }
 </script>
