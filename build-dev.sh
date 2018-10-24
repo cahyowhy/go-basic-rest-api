@@ -1,1 +1,1 @@
-cd templates && qtc && cd .. && go build && ./go-basic-rest-api -env="DEV"
+cd templates && qtc && cd .. && go build && ./go-basic-rest-api -env=DEV
