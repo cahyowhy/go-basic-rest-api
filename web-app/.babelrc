@@ -16,13 +16,6 @@
         "stage-2"
     ],
     "plugins": [
-        [
-            "import",
-            {
-                "libraryName": "ant-design-vue",
-                "libraryDirectory": "es",
-                "style": "css"
-            }
-        ]
+        "syntax-dynamic-import"
     ]
 }

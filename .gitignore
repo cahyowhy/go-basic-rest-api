@@ -3,3 +3,7 @@ debug
 .idea/
 web-app/node_modules/
 web-app/dist/
+public/css/
+public/js/
+public/vendor/js/non-priority.vendor.js
+public/vendor/css/non-priority.vendor.css

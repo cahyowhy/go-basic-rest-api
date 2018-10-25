@@ -26,137 +26,138 @@ func (p *IndexPage) StreamMetaInfo(qw422016 *qt422016.Writer) {
 	//line indexpage.qtpl:7
 	qw422016.N().S(`
 	<title>Todos Websites</title>
+    <meta name="turbolinks-visit-control" content="reload">
 `)
-//line indexpage.qtpl:9
+//line indexpage.qtpl:10
 }
 
-//line indexpage.qtpl:9
+//line indexpage.qtpl:10
 func (p *IndexPage) WriteMetaInfo(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	p.StreamMetaInfo(qw422016)
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:9
+//line indexpage.qtpl:10
 }
 
-//line indexpage.qtpl:9
+//line indexpage.qtpl:10
 func (p *IndexPage) MetaInfo() string {
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	p.WriteMetaInfo(qb422016)
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:9
+	//line indexpage.qtpl:10
 	return qs422016
-//line indexpage.qtpl:9
+//line indexpage.qtpl:10
 }
 
-//line indexpage.qtpl:11
+//line indexpage.qtpl:12
 func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line indexpage.qtpl:11
+	//line indexpage.qtpl:12
 	qw422016.N().S(`
     <div class="login-page">
         <form-login></form-login>  
     </div>
 `)
-//line indexpage.qtpl:15
+//line indexpage.qtpl:16
 }
 
-//line indexpage.qtpl:15
+//line indexpage.qtpl:16
 func (p *IndexPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	p.StreamBody(qw422016)
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:15
+//line indexpage.qtpl:16
 }
 
-//line indexpage.qtpl:15
+//line indexpage.qtpl:16
 func (p *IndexPage) Body() string {
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	p.WriteBody(qb422016)
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:15
+	//line indexpage.qtpl:16
 	return qs422016
-//line indexpage.qtpl:15
+//line indexpage.qtpl:16
 }
 
-//line indexpage.qtpl:17
+//line indexpage.qtpl:18
 func (p *IndexPage) StreamCSSExternal(qw422016 *qt422016.Writer) {
-	//line indexpage.qtpl:17
+	//line indexpage.qtpl:18
 	qw422016.N().S(`
 `)
-//line indexpage.qtpl:18
+//line indexpage.qtpl:19
 }
 
-//line indexpage.qtpl:18
+//line indexpage.qtpl:19
 func (p *IndexPage) WriteCSSExternal(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	p.StreamCSSExternal(qw422016)
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:18
+//line indexpage.qtpl:19
 }
 
-//line indexpage.qtpl:18
+//line indexpage.qtpl:19
 func (p *IndexPage) CSSExternal() string {
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	p.WriteCSSExternal(qb422016)
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:18
+	//line indexpage.qtpl:19
 	return qs422016
-//line indexpage.qtpl:18
+//line indexpage.qtpl:19
 }
 
-//line indexpage.qtpl:20
+//line indexpage.qtpl:21
 func (p *IndexPage) StreamScriptExternal(qw422016 *qt422016.Writer) {
-	//line indexpage.qtpl:20
+	//line indexpage.qtpl:21
 	qw422016.N().S(`
 `)
-//line indexpage.qtpl:21
+//line indexpage.qtpl:22
 }
 
-//line indexpage.qtpl:21
+//line indexpage.qtpl:22
 func (p *IndexPage) WriteScriptExternal(qq422016 qtio422016.Writer) {
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	p.StreamScriptExternal(qw422016)
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	qt422016.ReleaseWriter(qw422016)
-//line indexpage.qtpl:21
+//line indexpage.qtpl:22
 }
 
-//line indexpage.qtpl:21
+//line indexpage.qtpl:22
 func (p *IndexPage) ScriptExternal() string {
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	p.WriteScriptExternal(qb422016)
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	qs422016 := string(qb422016.B)
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line indexpage.qtpl:21
+	//line indexpage.qtpl:22
 	return qs422016
-//line indexpage.qtpl:21
+//line indexpage.qtpl:22
 }

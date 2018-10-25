@@ -140,12 +140,20 @@ var DefinedRoutes = Routes{
 		handlers.RenderIndex,
 	},
 	Route{
-		"RenderSettings",
+		"Render Settings",
 		"GET",
 		"/setting",
 		false,
 		true,
 		handlers.RenderSetting,
+	},
+	Route{
+		"Render Admin",
+		"GET",
+		"/admin",
+		false,
+		true,
+		handlers.RenderAdmin,
 	},
 	Route{
 		"RenderTodo",
@@ -156,7 +164,7 @@ var DefinedRoutes = Routes{
 		handlers.RenderTodo,
 	},
 	Route{
-		"RenderHome",
+		"Render Home",
 		"GET",
 		"/home",
 		false,

@@ -1,5 +1,6 @@
 /**
  * Created by fajar on 01/22/2018.
+ * Updated by cahyo on 24/10/2018.
  *
  * Vue Default config instance
  * to inject or register anything can be here
@@ -7,6 +8,12 @@
 
 import { Vue } from 'annotation';
 import Constant from '../config/Constant';
+
+// light component
+import CommonImage from '../components/CommonImage.vue';
+import EmptyStates from '../components/EmptyStates.vue';
+import NavigationBar from '../components/NavigationBar.vue';
+import UserBadge from '../components/UserBadge.vue';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
@@ -16,20 +23,19 @@ Vue.config.errorHandler = (error: any) => console.log(error);
 // exporting constant string property to template
 Vue.prototype.Constant = Constant;
 
-// register all component, ex: NagivationBar => accessible to navigation-bar
-const components: any = require.context('../components', true, /\.(vue)$/i);
-components.keys().map((key: any) => {
-  let componentName: any = key.match(/\w+/)[0];
+// register light component
+Vue.component('common-image', CommonImage);
+Vue.component('empty-states', EmptyStates);
+Vue.component('navigation-bar', NavigationBar);
+Vue.component('user-badge', UserBadge);
 
-  // check has sub folder
-  if ((key.match(/\//g) || []).length > 1) {
-    componentName = key.split('/');
-    componentName = componentName[componentName.length - 1];
-    componentName = componentName.match(/\w+/)[0];
-  }
-
-  Vue.component(componentName, components(key));
-});
+// TODO://get rid of this red shit!
+// lazy load heavy component
+Vue.component('form-login', () => import("../components/FormLogin.vue"));
+Vue.component('user-home', () => import("../components/UserHome.vue"));
+Vue.component('settings-user', () => import("../components/SettingsUser.vue"));
+Vue.component('admin-page', () => import("../components/AdminPage.vue"));
+Vue.component('common-editor', () => import("../components/CommonEditor.vue"));
 
 // register all filter in util dir,
 // ex: can be use from template using 'param | filterName'

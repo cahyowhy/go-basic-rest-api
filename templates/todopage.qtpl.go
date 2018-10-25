@@ -41,40 +41,39 @@ func (p *TodoPage) StreamMetaInfo(qw422016 *qt422016.Writer) {
 	//line todopage.qtpl:12
 	qw422016.N().S(`"/>
     <meta name="og:type" content="article"/>
-    <meta name="turbolinks-visit-control" content="reload">
 `)
-//line todopage.qtpl:15
+//line todopage.qtpl:14
 }
 
-//line todopage.qtpl:15
+//line todopage.qtpl:14
 func (p *TodoPage) WriteMetaInfo(qq422016 qtio422016.Writer) {
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	p.StreamMetaInfo(qw422016)
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	qt422016.ReleaseWriter(qw422016)
-//line todopage.qtpl:15
+//line todopage.qtpl:14
 }
 
-//line todopage.qtpl:15
+//line todopage.qtpl:14
 func (p *TodoPage) MetaInfo() string {
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	p.WriteMetaInfo(qb422016)
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	qs422016 := string(qb422016.B)
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line todopage.qtpl:15
+	//line todopage.qtpl:14
 	return qs422016
-//line todopage.qtpl:15
+//line todopage.qtpl:14
 }
 
-//line todopage.qtpl:17
+//line todopage.qtpl:16
 func (p *TodoPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line todopage.qtpl:17
+	//line todopage.qtpl:16
 	qw422016.N().S(`
     <div class="todo-page">
         <div class="nav-wrp">
@@ -83,123 +82,123 @@ func (p *TodoPage) StreamBody(qw422016 *qt422016.Writer) {
        <div class="columns">
         <div class="column">
             <user-badge user="`)
-	//line todopage.qtpl:24
+	//line todopage.qtpl:23
 	qw422016.E().V(string(p.UserJSON))
-	//line todopage.qtpl:24
+	//line todopage.qtpl:23
 	qw422016.N().S(`"/>
         </div>
         <div class="column is-three-quarters">
             <p class="title is-5">
                 `)
-	//line todopage.qtpl:28
+	//line todopage.qtpl:27
 	qw422016.E().S(p.Todo.Name)
-	//line todopage.qtpl:28
+	//line todopage.qtpl:27
 	qw422016.N().S(`
             </p>
             <div class="content">
                 `)
-	//line todopage.qtpl:31
+	//line todopage.qtpl:30
 	qw422016.N().S(p.Todo.Content)
-	//line todopage.qtpl:31
+	//line todopage.qtpl:30
 	qw422016.N().S(`
             </div>
         </div>
        </div>
     </div>
 `)
-//line todopage.qtpl:36
+//line todopage.qtpl:35
 }
 
-//line todopage.qtpl:36
+//line todopage.qtpl:35
 func (p *TodoPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	p.StreamBody(qw422016)
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	qt422016.ReleaseWriter(qw422016)
-//line todopage.qtpl:36
+//line todopage.qtpl:35
 }
 
-//line todopage.qtpl:36
+//line todopage.qtpl:35
 func (p *TodoPage) Body() string {
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	p.WriteBody(qb422016)
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	qs422016 := string(qb422016.B)
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line todopage.qtpl:36
+	//line todopage.qtpl:35
 	return qs422016
-//line todopage.qtpl:36
+//line todopage.qtpl:35
+}
+
+//line todopage.qtpl:37
+func (p *TodoPage) StreamCSSExternal(qw422016 *qt422016.Writer) {
+	//line todopage.qtpl:37
+	qw422016.N().S(`
+`)
+//line todopage.qtpl:38
 }
 
 //line todopage.qtpl:38
-func (p *TodoPage) StreamCSSExternal(qw422016 *qt422016.Writer) {
+func (p *TodoPage) WriteCSSExternal(qq422016 qtio422016.Writer) {
 	//line todopage.qtpl:38
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line todopage.qtpl:38
+	p.StreamCSSExternal(qw422016)
+	//line todopage.qtpl:38
+	qt422016.ReleaseWriter(qw422016)
+//line todopage.qtpl:38
+}
+
+//line todopage.qtpl:38
+func (p *TodoPage) CSSExternal() string {
+	//line todopage.qtpl:38
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line todopage.qtpl:38
+	p.WriteCSSExternal(qb422016)
+	//line todopage.qtpl:38
+	qs422016 := string(qb422016.B)
+	//line todopage.qtpl:38
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line todopage.qtpl:38
+	return qs422016
+//line todopage.qtpl:38
+}
+
+//line todopage.qtpl:40
+func (p *TodoPage) StreamScriptExternal(qw422016 *qt422016.Writer) {
+	//line todopage.qtpl:40
 	qw422016.N().S(`
 `)
-//line todopage.qtpl:39
-}
-
-//line todopage.qtpl:39
-func (p *TodoPage) WriteCSSExternal(qq422016 qtio422016.Writer) {
-	//line todopage.qtpl:39
-	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line todopage.qtpl:39
-	p.StreamCSSExternal(qw422016)
-	//line todopage.qtpl:39
-	qt422016.ReleaseWriter(qw422016)
-//line todopage.qtpl:39
-}
-
-//line todopage.qtpl:39
-func (p *TodoPage) CSSExternal() string {
-	//line todopage.qtpl:39
-	qb422016 := qt422016.AcquireByteBuffer()
-	//line todopage.qtpl:39
-	p.WriteCSSExternal(qb422016)
-	//line todopage.qtpl:39
-	qs422016 := string(qb422016.B)
-	//line todopage.qtpl:39
-	qt422016.ReleaseByteBuffer(qb422016)
-	//line todopage.qtpl:39
-	return qs422016
-//line todopage.qtpl:39
+//line todopage.qtpl:41
 }
 
 //line todopage.qtpl:41
-func (p *TodoPage) StreamScriptExternal(qw422016 *qt422016.Writer) {
-	//line todopage.qtpl:41
-	qw422016.N().S(`
-`)
-//line todopage.qtpl:42
-}
-
-//line todopage.qtpl:42
 func (p *TodoPage) WriteScriptExternal(qq422016 qtio422016.Writer) {
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	p.StreamScriptExternal(qw422016)
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	qt422016.ReleaseWriter(qw422016)
-//line todopage.qtpl:42
+//line todopage.qtpl:41
 }
 
-//line todopage.qtpl:42
+//line todopage.qtpl:41
 func (p *TodoPage) ScriptExternal() string {
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	p.WriteScriptExternal(qb422016)
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	qs422016 := string(qb422016.B)
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line todopage.qtpl:42
+	//line todopage.qtpl:41
 	return qs422016
-//line todopage.qtpl:42
+//line todopage.qtpl:41
 }

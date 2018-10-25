@@ -2,6 +2,7 @@ import { Vue, Inject } from 'annotation';
 import CommonService from './view/service/CommonService';
 import queryString from 'query-string';
 import Turbolinks from 'turbolinks';
+import environment from "environment";
 
 import './view/plugin/VueCookie';
 import './view/plugin/VueDefault';
@@ -21,6 +22,17 @@ class App {
     private commonService: CommonService;
 
     init() {
+        // if dev env inject live reload manually
+        if (environment['ENV'] !== 'PROD') {
+            document.addEventListener('DOMContentLoaded', function () {
+                let script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'http://localhost:35729/livereload.js';
+
+                document.body.appendChild(script);
+            }, false);
+        }
+
         (Date as any).prototype.addDays = function (days) {
             var date = new Date(this.valueOf());
             date.setDate(date.getDate() + days);

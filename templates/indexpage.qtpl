@@ -6,6 +6,7 @@
 
 {% func (p *IndexPage) MetaInfo() %}
 	<title>Todos Websites</title>
+    <meta name="turbolinks-visit-control" content="reload">
 {% endfunc %}
 
 {% func (p *IndexPage) Body() %}
