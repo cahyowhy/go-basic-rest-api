@@ -11,7 +11,7 @@ function SW() {
   
     const that = this;
   
-    navigator.serviceWorker.register('/assets/sw.js')
+    navigator.serviceWorker.register('/public/vendor/js/sw.js')
       .then(function(reg) {
         console.info('SW is registered.');
   

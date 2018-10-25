@@ -23,7 +23,7 @@
                 </b-input>
             </b-field>
             <div class="has-text-centered field">
-                <input type="submit" value="Login" :class="`button is-${(isRegister ? user.validRegister() : user.validLogin()) ? 'info' : 'danger'}`" />
+                <input type="submit" :value="isRegister ? 'Register' : 'Login'" :class="`button is-${(isRegister ? user.validRegister() : user.validLogin()) ? 'info' : 'danger'}`" />
             </div>
         </form>
         <section class="has-text-centered">

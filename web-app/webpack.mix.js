@@ -2,6 +2,7 @@ const mix = require("laravel-mix");
 const path = require("path");
 const resolve = file => path.resolve(__dirname, file);
 const isProduction = mix.inProduction();
+var LiveReloadPlugin = require("webpack-livereload-plugin");
 const environmentPath = resolve("src/view/config/environment");
 /*
  |--------------------------------------------------------------------------
@@ -15,7 +16,6 @@ const environmentPath = resolve("src/view/config/environment");
  */
 
 mix.disableSuccessNotifications();
-var LiveReloadPlugin = require("webpack-livereload-plugin");
 
 mix
   .scripts(
@@ -29,10 +29,15 @@ mix
   .options({
     processCssUrls: false
   })
-  .sass("src/sass/app.scss", "dist/css")
-  .js("src/app.ts", "dist/js")
-  .copyDirectory("dist", "../public")
+  .sass("src/sass/app.scss", "css")
+  .js("src/app.ts", "js")
   .webpackConfig({
+    output: {
+      filename: '[name].js',
+      path: path.resolve(__dirname, "dist"),
+      publicPath: '/public/',
+      chunkFilename: 'js/[chunkhash][name].js',
+    },
     devtool: mix.inProduction() ? "" : "inline-source-map",
     module: {
       rules: [
@@ -62,4 +67,5 @@ mix
           `${isProduction ? "/production" : "/development"}.env.ts`
       }
     }
-  });
+  })
+  .copyDirectory("dist", "../public");

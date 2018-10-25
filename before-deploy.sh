@@ -1,1 +1,1 @@
-cd templates && qtc && cd .. && cd web-app && npm run production && cd .. && go build
+cd templates && qtc && cd .. && cd web-app && yarn production && cd .. && go build

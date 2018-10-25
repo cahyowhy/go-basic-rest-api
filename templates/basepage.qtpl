@@ -1,5 +1,4 @@
 This is a base page template. All the other template pages implement this interface.
-{% import "os" %}
 {%
 interface Page {
     MetaInfo()
@@ -27,7 +26,7 @@ Page prints a page implementing Page interface.
     <script type="text/javascript" src="/public/vendor/js/jquery.min.js"></script>
     <script type="text/javascript" src="/public/vendor/js/jquery.migrate.min.js"></script>
     <script type="text/javascript" src="/public/js/app.js" defer></script>
-    <script type="text/javascript" src="/public/js/sw-controller.js"></script>
+    <script type="text/javascript" src="/public/vendor/js/sw-controller.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             new SW();
@@ -42,11 +41,6 @@ Page prints a page implementing Page interface.
     </div>
     <link rel="stylesheet" href="/public/vendor/css/non-priority.vendor.css">
     <script type="text/javascript" src="/public/vendor/js/non-priority.vendor.js"></script>
-    {%s= p.ScriptExternal() %}
-    {% if os.Getenv("ENV") == "" || os.Getenv("ENV") == "DEV" %}
-        <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
-    {% endif %}
-    
 </body>
 </html>
 {% endcollapsespace %}
