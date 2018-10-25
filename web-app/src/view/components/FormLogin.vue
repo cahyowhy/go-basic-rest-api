@@ -50,7 +50,7 @@ import CommonService from "../service/CommonService";
 @Component
 export default class FormLogin extends Vue {
   @Inject private userService: UserService;
-  
+
   @Inject private commonService: CommonService;
 
   private user: User = new User();
@@ -63,7 +63,7 @@ export default class FormLogin extends Vue {
 
   private get isLoginFirst() {
     const query = (this as any).$root.route.query;
-    
+
     return !isEmpty(query) && !isEmpty(query["login-first"]);
   }
 
