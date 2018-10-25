@@ -1,1 +1,1 @@
-cd templates && qtc && cd .. && cd web-app && yarn production && cd .. && go build
+cd templates && qtc && cd .. && cd web-app && yarn && yarn production && cd .. && go build
