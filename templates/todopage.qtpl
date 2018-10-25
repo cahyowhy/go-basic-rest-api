@@ -11,7 +11,6 @@
     <title>Todo {%s p.Todo.Name%}</title>
     <meta name="og:title" content="{%s p.Todo.Name %}"/>
     <meta name="og:type" content="article"/>
-    <meta name="turbolinks-visit-control" content="reload">
 {% endfunc %}
 
 {% func (p *TodoPage) Body() %}

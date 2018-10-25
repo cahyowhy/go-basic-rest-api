@@ -22,6 +22,19 @@ Page prints a page implementing Page interface.
     <link rel='shortcut icon' type='image/x-icon' href='/public/images/favicon.ico' />
     <link rel="manifest" href="/public/manifest.json">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css">
+    <style>
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+        /* .slide-fade-leave-active below version 2.1.8 */ {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+    </style>
     <meta name="og:site_name" content="Todo App"/>
     <script type="text/javascript" src="/public/vendor/js/jquery.min.js"></script>
     <script type="text/javascript" src="/public/vendor/js/jquery.migrate.min.js"></script>
@@ -37,7 +50,9 @@ Page prints a page implementing Page interface.
 </head>
 <body>
 	<div id="app">
+    <transition name="slide-fade">
         {%s= p.Body() %}
+    </transition>
     </div>
     <link rel="stylesheet" href="/public/vendor/css/non-priority.vendor.css">
     <script type="text/javascript" src="/public/vendor/js/non-priority.vendor.js"></script>
