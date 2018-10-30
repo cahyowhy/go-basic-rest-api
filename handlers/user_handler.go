@@ -65,12 +65,13 @@ func AuthUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ProcessJSON(w, http.StatusOK, responseJson, utils.LOGIN_SUCCESS)
+	ProcessJSON(w, http.StatusOK, responseJson, utils.LOGIN_SUCCESS, "")
 }
 
 func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	users := []models.User{}
+	var count string
 
 	if query.Get("offset") == "" || query.Get("limit") == "" {
 		respondError(w, http.StatusBadRequest, `"Required offset limit but not present"`, utils.INPUT_NOT_VALID)
@@ -79,13 +80,21 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := db.Offset(query.Get("offset")).Limit(query.Get("limit"))
+	txCount := db.Model(&models.User{})
 
 	if query.Get("username") != "" {
 		tx = tx.Where("username Like ?", "%"+query.Get("username")+"%")
+		txCount = txCount.Where("username Like ?", "%"+query.Get("username")+"%")
 	}
 
 	if err := tx.Find(&users).Error; err != nil {
 		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
+
+		return
+	}
+
+	if err := txCount.Count(&count).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.DB_EXCEPTION)
 
 		return
 	}
@@ -95,7 +104,7 @@ func GetAllUsers(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.FAILED_SERIALIZE)
 	}
 
-	ProcessJSON(w, http.StatusOK, userJsons, utils.STATUS_OK)
+	ProcessJSON(w, http.StatusOK, userJsons, utils.STATUS_OK, count)
 }
 
 func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {

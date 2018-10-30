@@ -14,6 +14,7 @@ import (
 func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	todos := []models.Todo{}
+	var count string
 
 	if query.Get("offset") == "" || query.Get("limit") == "" {
 		respondError(w, http.StatusBadRequest, `"Required offset limit but not present"`, utils.INPUT_NOT_VALID)
@@ -22,13 +23,21 @@ func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := db.Preload("User").Order("id DESC").Offset(query.Get("offset")).Limit(query.Get("limit"))
+	txCount := db.Model(&models.Todo{})
 
 	if query.Get("user_id") != "" {
 		tx = tx.Where("user_id = ?", query.Get("user_id"))
+		txCount = txCount.Where("user_id = ?", query.Get("user_id"))
 	}
 
 	if err := tx.Find(&todos).Error; err != nil {
 		respondError(w, http.StatusNotFound, fmt.Sprintf(`"%s"`, err.Error()), utils.DATA_NOT_FOUND)
+
+		return
+	}
+
+	if err := txCount.Count(&count).Error; err != nil {
+		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.DB_EXCEPTION)
 
 		return
 	}
@@ -38,7 +47,7 @@ func GetAllTodos(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.FAILED_SERIALIZE)
 	}
 
-	ProcessJSON(w, http.StatusOK, todoJsons, utils.STATUS_OK)
+	ProcessJSON(w, http.StatusOK, todoJsons, utils.STATUS_OK, count)
 }
 
 func CreateTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -115,7 +124,7 @@ func DeleteTodo(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ProcessJSON(w, http.StatusOK, []byte(`"Delete Suceed"`), utils.DELETE_SUCCESS)
+	ProcessJSON(w, http.StatusOK, []byte(`"Delete Suceed"`), utils.DELETE_SUCCESS, "")
 }
 
 func getTodoOr404(db *gorm.DB, id string, w http.ResponseWriter, r *http.Request) *models.Todo {

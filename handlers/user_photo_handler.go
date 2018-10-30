@@ -31,7 +31,7 @@ func GetUserPhoto(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.FAILED_SERIALIZE)
 	}
 
-	ProcessJSON(w, http.StatusOK, userPhotoJsons, utils.STATUS_OK)
+	ProcessJSON(w, http.StatusOK, userPhotoJsons, utils.STATUS_OK, "")
 }
 
 func UploadUserPhoto(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
