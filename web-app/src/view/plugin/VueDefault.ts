@@ -14,6 +14,7 @@ import CommonImage from '../components/CommonImage.vue';
 import EmptyStates from '../components/EmptyStates.vue';
 import NavigationBar from '../components/NavigationBar.vue';
 import UserBadge from '../components/UserBadge.vue';
+import CommonTable from '../components/CommonTable.vue';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
@@ -28,6 +29,7 @@ Vue.component('common-image', CommonImage);
 Vue.component('empty-states', EmptyStates);
 Vue.component('navigation-bar', NavigationBar);
 Vue.component('user-badge', UserBadge);
+Vue.component('common-table', CommonTable);
 
 // TODO://get rid of this red shit!
 // lazy load heavy component

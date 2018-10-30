@@ -175,7 +175,7 @@ var DefinedRoutes = Routes{
 
 func NotFoundRoute(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(r.RequestURI, "/api/") {
-		handlers.ProcessJSON(w, http.StatusNotFound, []byte(`"NOT FOUND"`), utils.DATA_NOT_FOUND)
+		handlers.ProcessJSON(w, http.StatusNotFound, []byte(`"NOT FOUND"`), utils.DATA_NOT_FOUND, "")
 	} else {
 		handlers.RenderNotFound(w, r)
 	}

@@ -6,6 +6,7 @@ import { normalizeUnderscore } from "../util/StringUtil";
 
 import Base from "./Base";
 import Todo from "./Todo";
+import TableColumn from "./TableColumn";
 
 @inheritSerialization(Base)
 export default class User extends Base {
@@ -137,19 +138,31 @@ export default class User extends Base {
 
   public static OnDeserialized(instance: User, json: any): void {
     const createdDate = json.created_at || new Date().toDateString();
-    instance.created_at = moment(new Date(createdDate)).format(
-      Constant.DATE_PATTERN
-    );
+    instance.created_at = moment(new Date(createdDate)).format(Constant.DATE_PATTERN);
 
     if (json.image_profile) {
       instance.image_profile = "/user-files/" + json.image_profile;
     }
   }
 
-  public static columnName(): Array<any> {
+  public static columnName(): Array<TableColumn> {
     const user = new User().table();
-    return Object.keys(user).map(field => {
-      return { field, label: normalizeUnderscore(field) };
+    let keys = Object.keys(user);
+    keys.push("aksi");
+    keys.unshift("no");
+
+    return keys.map((field: any, index: number) => {
+      const tableColumn = new TableColumn();
+
+      tableColumn.field = field;
+      tableColumn.label = normalizeUnderscore(field);
+      tableColumn.sortable = field === "username";
+      tableColumn.centered = field === "id" || field === "created_at";
+      tableColumn.width = "auto";
+      tableColumn.customSlot = field === "aksi";
+      tableColumn.isNumbering = field === "no";
+
+      return tableColumn;
     });
   }
 }

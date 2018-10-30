@@ -26,6 +26,16 @@
   min-height: 100vh;
 }
 
+.modal {
+  .modal-card-head {
+    padding: 1rem;
+  }
+  .modal-card-title {
+    font-size: 1rem;
+    line-height: initial;
+  }
+}
+
 nav.navbar {
   .navbar-item img {
     max-height: none;
@@ -183,6 +193,19 @@ p.help {
   }
 }
 
+.common-table {
+  thead {
+    background-color: $info;
+    th {
+      background-color: transparent !important;
+    }
+    th .th-wrap {
+      color: white;
+      background-color: transparent !important;
+    }
+  }
+}
+
 .common-editor {
   background: white;
   padding: 1rem;
@@ -309,6 +332,10 @@ p.help {
 
 .admin-page {
     background-color: $white-ter;
+    .modal-edit-user form {
+      padding: 1rem;
+      background-color: white;
+    }
 }
 
 .todo-item {

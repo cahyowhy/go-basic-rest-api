@@ -162,6 +162,10 @@ abstract class ProxyService extends BaseService {
   public convertResponse(response: any, responseAsObject: boolean = false, serializer: EntityAware = null) {
     const context: ProxyService = this;
 
+    if (response.count) {
+      response.count = parseInt(response.count);
+    }
+
     if (response.data) {
       if (typeof context.serializer === 'function' || typeof serializer === 'function') {
         serializer = typeof serializer === 'function' ? serializer : context.serializer;
