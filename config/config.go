@@ -15,9 +15,16 @@ type DBConfig struct {
 	Port     string
 }
 
+type CloudinaryConfig struct {
+	Acount    string
+	Secret    string
+	CloudName string
+}
+
 type Config struct {
-	ENV string
-	DB  *DBConfig
+	ENV              string
+	DB               *DBConfig
+	CloudinaryConfig *CloudinaryConfig
 }
 
 var config *Config
@@ -35,6 +42,11 @@ func GetConfig() *Config {
 				Host:     os.Getenv("DBHOST"),
 				Port:     os.Getenv("DBPORT"),
 				Charset:  "utf8",
+			},
+			CloudinaryConfig: &CloudinaryConfig{
+				Acount:    os.Getenv("Cloudinary_Account_Key"),
+				Secret:    os.Getenv("Cloudinary_Secret_Key"),
+				CloudName: os.Getenv("Cloudinary_Cloud_Name"),
 			},
 		}
 	})

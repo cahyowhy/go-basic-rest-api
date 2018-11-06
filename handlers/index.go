@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go-basic-rest-api/cloudinary"
+	"go-basic-rest-api/config"
 	"go-basic-rest-api/models"
 	"go-basic-rest-api/utils"
+	"io"
 	"io/ioutil"
+	"log"
+	"os"
 	"strings"
 
 	"mime/multipart"
@@ -127,15 +132,36 @@ func uploadPhotoUserMixin(db *gorm.DB, w http.ResponseWriter, r *http.Request) (
 	filename := randstr.Hex(16) + handle.Filename
 	mimeType := r.Header.Get("Content-Type")
 	allowedFormatFiles := []string{"jpg", "png", "gif", "jpeg"}
+	config := config.GetConfig()
 
 	if !strings.Contains(mimeType, "multipart/form-data") {
 		ProcessJSON(w, http.StatusBadRequest, []byte(`"invalid file header"`), utils.UPLOAD_FAILED, "")
 		return models.UserPhoto{}, errors.New("invalid file header")
 	}
 
-	if err = saveFile(file, handle, filename, allowedFormatFiles); err != nil {
-		ProcessJSON(w, http.StatusInternalServerError, []byte(fmt.Sprintf(`"%s"`, err.Error())), utils.UPLOAD_FAILED, "")
-		return models.UserPhoto{}, err
+	if config.ENV == "DEV" {
+		var outfile *os.File
+		if outfile, err = os.Create("./user-files-temp/" + filename); nil != err {
+			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
+			return models.UserPhoto{}, err
+		}
+
+		if _, err = io.Copy(outfile, file); nil != err {
+			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
+			return models.UserPhoto{}, err
+		}
+
+		if filename, err = cloudinary.GetService().UploadFile(outfile.Name(), nil); err != nil {
+			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
+			return models.UserPhoto{}, err
+		}
+
+		log.Println("outfile : " + outfile.Name() + ", filename : " + filename)
+	} else {
+		if err := saveFile(file, handle, filename, allowedFormatFiles); err != nil {
+			ProcessJSON(w, http.StatusInternalServerError, []byte(fmt.Sprintf(`"%s"`, err.Error())), utils.UPLOAD_FAILED, "")
+			return models.UserPhoto{}, err
+		}
 	}
 
 	userPhoto.Path = filename

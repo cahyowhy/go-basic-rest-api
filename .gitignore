@@ -3,3 +3,5 @@ debug
 .idea/
 web-app/node_modules/
 web-app/dist/
+files/
+user-files-temp/
