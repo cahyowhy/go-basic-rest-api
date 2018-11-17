@@ -139,9 +139,16 @@ func uploadPhotoUserMixin(db *gorm.DB, w http.ResponseWriter, r *http.Request) (
 		return models.UserPhoto{}, errors.New("invalid file header")
 	}
 
-	if config.ENV == "DEV" {
+	if config.ENV == "PROD" {
 		var outfile *os.File
-		if outfile, err = os.Create("./user-files-temp/" + filename); nil != err {
+		tempDir := "./user-files-temp/"
+		tempFile := tempDir + filename
+
+		if _, err := os.Stat(tempDir); os.IsNotExist(err) {
+			os.Mkdir(tempDir, os.ModePerm)
+		}
+
+		if outfile, err = os.Create(tempFile); nil != err {
 			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
 			return models.UserPhoto{}, err
 		}
@@ -152,6 +159,11 @@ func uploadPhotoUserMixin(db *gorm.DB, w http.ResponseWriter, r *http.Request) (
 		}
 
 		if filename, err = cloudinary.GetService().UploadFile(outfile.Name(), nil); err != nil {
+			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
+			return models.UserPhoto{}, err
+		}
+
+		if err = os.Remove(tempFile); err != nil {
 			respondError(w, http.StatusInternalServerError, fmt.Sprintf(`"%s"`, err.Error()), utils.UPLOAD_FAILED)
 			return models.UserPhoto{}, err
 		}

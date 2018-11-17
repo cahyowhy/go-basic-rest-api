@@ -1,11 +1,6 @@
 import User from "./User";
 import Base from "./Base";
-import {
-  deserialize,
-  inheritSerialization,
-  serialize,
-  deserializeAs
-} from "cerialize";
+import { deserialize, inheritSerialization, serialize, deserializeAs } from "cerialize";
 
 @inheritSerialization(Base)
 export default class UserPhoto extends Base {
@@ -24,13 +19,15 @@ export default class UserPhoto extends Base {
   public file: any = null;
 
   public static OnDeserialized(instance: UserPhoto, json: any): void {
-    if (json.path) {
+    // handle migration from local file to cloudinary
+
+    if (json.path && !json.path.startsWith("http")) {
       instance.path = "/user-files/" + json.path;
     }
   }
 
   public static OnSerialized(instance: UserPhoto, json: any): void {
-    ['path', 'user'].forEach(item => {
+    ["path", "user"].forEach(item => {
       delete json[item];
     });
   }

@@ -125,9 +125,12 @@ export default class User extends Base {
   }
 
   public validRegister(): boolean {
-    return keysIn(this)
-      .filter((prop: string) => prop.toLowerCase().includes("feedback"))
-      .every((prop: string) => this[prop]().valid);
+    return (
+      this.nameFeedback().valid &&
+      this.usernameFeedback().valid &&
+      this.passwordFeedback().valid &&
+      this.passwordConfirmFeedback().valid
+    );
   }
 
   public loginProperty(): any {
@@ -140,7 +143,7 @@ export default class User extends Base {
     const createdDate = json.created_at || new Date().toDateString();
     instance.created_at = moment(new Date(createdDate)).format(Constant.DATE_PATTERN);
 
-    if (json.image_profile) {
+    if (json.image_profile && !json.image_profile.startsWith("http")) {
       instance.image_profile = "/user-files/" + json.image_profile;
     }
   }
@@ -166,3 +169,4 @@ export default class User extends Base {
     });
   }
 }
+/*  */
