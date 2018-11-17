@@ -125,9 +125,12 @@ export default class User extends Base {
   }
 
   public validRegister(): boolean {
-    return keysIn(this)
-      .filter((prop: string) => prop.toLowerCase().includes("feedback"))
-      .every((prop: string) => this[prop]().valid);
+    return (
+      this.nameFeedback().valid &&
+      this.usernameFeedback().valid &&
+      this.passwordFeedback().valid &&
+      this.passwordConfirmFeedback().valid
+    );
   }
 
   public loginProperty(): any {

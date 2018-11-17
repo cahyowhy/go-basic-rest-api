@@ -8,3 +8,4 @@ public/js/
 public/vendor/js/non-priority.vendor.js
 public/vendor/css/non-priority.vendor.css
 templates/*.go
+user-files-temp/
